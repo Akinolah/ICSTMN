@@ -1,6 +1,6 @@
-# Nigerian Professional Institute Portal
+# Institute of Customer Service and Trade Management of Nigeria
 
-Welcome to the official repository for the **Nigerian Professional Institute** web portal!  
+Welcome to the official repository for the **institute-customer-trade-ng** web portal!  
 This project is a modern, scalable, and visually engaging platform for professional development, membership management, events, and resources.
 
 ---
