@@ -14,6 +14,10 @@ export interface IUser extends Document {
   referenceTwo: string;
   membershipType: string;
   isAdmin: boolean;
+  adminIndex?: number;
+  eventsManaged?: number;
+  contentsUploaded?: number;
+  lastActive?: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -30,6 +34,10 @@ const UserSchema: Schema = new Schema({
   referenceTwo: String,
   membershipType: String,
   isAdmin: { type: Boolean, default: false }
+  adminIndex: { type: Number, default: null },
+  eventsManaged: { type: Number, default: 0 },
+  contentsUploaded: { type: Number, default: 0 },
+  lastActive: { type: String, default: '' },
 });
 
 export default mongoose.model<IUser>('User', UserSchema);

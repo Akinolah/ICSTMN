@@ -6,6 +6,7 @@ import { connectDB } from './utils/db';
 import authRoutes from './routes/auth.routes';
 import paymentRoutes from './routes/payment.routes';
 import { seedAdmins } from './utils/adminSeed';
+import adminRoutes from './routes/admin.routes';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(morgan('dev'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/admin', adminRoutes);
 
 const PORT = process.env.PORT || 5000;
 
