@@ -33,7 +33,7 @@ const UserSchema: Schema = new Schema({
   referenceOne: String,
   referenceTwo: String,
   membershipType: String,
-  isAdmin: { type: Boolean, default: false }
+  isAdmin: { type: Boolean, default: false },
   adminIndex: { type: Number, default: null },
   eventsManaged: { type: Number, default: 0 },
   contentsUploaded: { type: Number, default: 0 },

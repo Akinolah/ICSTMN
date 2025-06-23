@@ -2,11 +2,11 @@ import User from '../models/user.model';
 import bcrypt from 'bcryptjs';
 
 const admins = [
-  { email: 'admin1@ictng.org', password: 'Admin@1234', name: 'Admin One' },
-  { email: 'admin2@ictng.org', password: 'Admin@1234', name: 'Admin Two' },
-  { email: 'admin3@ictng.org', password: 'Admin@1234', name: 'Admin Three' },
-  { email: 'admin4@ictng.org', password: 'Admin@1234', name: 'Admin Four' },
-  { email: 'admin5@ictng.org', password: 'Admin@1234', name: 'Admin Five' },
+  { email: 'admin1@ictng.org', password: 'Admin@1234', name: 'Admin One', adminIndex: 0 },
+  { email: 'admin2@ictng.org', password: 'Admin@1234', name: 'Admin Two', adminIndex: 1 },
+  { email: 'admin3@ictng.org', password: 'Admin@1234', name: 'Admin Three', adminIndex: 2 },
+  { email: 'admin4@ictng.org', password: 'Admin@1234', name: 'Admin Four', adminIndex: 3 },
+  { email: 'admin5@ictng.org', password: 'Admin@1234', name: 'Admin Five', adminIndex: 4 },
 ];
 
 export const seedAdmins = async () => {
