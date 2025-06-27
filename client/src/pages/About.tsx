@@ -2,13 +2,7 @@ import React from 'react';
 import { Award, Target, Eye, Users, Globe, TrendingUp } from 'lucide-react';
 
 const About: React.FC = () => {
-  const leaders = [
-    {
-      name: 'Arc. Ahmed Musa Dangiwa, FCSTM',
-      role: 'Patron',
-      image: '/uploads/images/council/arc-ahmed-musa.png',
-      bio: 'Distinguished academic and industry leader with over 25 years of experience in professional development and organizational excellence.'
-    },
+  const councilMembers = [
     {
       name: 'Sen. Suleman Abdu-Kwari, FCA, FCSTM',
       role: 'Grand Patron',
@@ -16,9 +10,21 @@ const About: React.FC = () => {
       bio: 'Experienced executive specializing in strategic planning, member services, and professional certification programs.'
     },
     {
+      name: 'Arc. Ahmed Musa Dangiwa, FCSTM',
+      role: 'Patron',
+      image: '/uploads/images/council/arc-ahmed-musa.png',
+      bio: 'Distinguished academic and industry leader with over 25 years of experience in professional development and organizational excellence.'
+    },
+    {
       name: 'Dr. Mrs. Gloria Laraba Shoda MNI',
       role: 'Chairman of Council/President',
       image: '/uploads/images/council/dr.gloria-laraba-shoda.png',
+      bio: 'Leading expert in professional ethics and standards with extensive experience in regulatory compliance and quality assurance.'
+    },
+    {
+      name: 'Mrs. Adenike Olufade, FCSTM, NIMN',
+      role: 'Vice President of Council II',
+      image: '/uploads/images/council/mrs-adenike-olufade.png',
       bio: 'Leading expert in professional ethics and standards with extensive experience in regulatory compliance and quality assurance.'
     },
     {
@@ -53,27 +59,27 @@ const About: React.FC = () => {
     },
     {
       name: 'Mr. Eugene Nweke, FCSTM',
-      role: 'Patron',
+      role: 'Council Member',
       image: '/uploads/images/council/mr-eugene-nweke.png',
       bio: 'Leading expert in professional ethics and standards with extensive experience in regulatory compliance and quality assurance.'
     },
     {
       name: 'Mrs. Nkechi Iluno, FCSTM',
-      role: 'Patron',
+      role: 'Council Member',
       image: '/uploads/images/council/mrs-nkechi-iluno.png',
       bio: 'Leading expert in professional ethics and standards with extensive experience in regulatory compliance and quality assurance.'
     },
     {
       name: 'Mrs. Azuka Azinge, FCSTM',
-      role: 'Patron',
+      role: 'Council Member',
       image: '/uploads/images/council/mrs-abuja-azinge.png',
       bio: 'Leading expert in professional ethics and standards with extensive experience in regulatory compliance and quality assurance.'
     },
     {
-      name: 'Mrs. Adenike Olufade, FCSTM, NIMN',
-      role: 'Vice President of Council II',
-      image: '/uploads/images/council/mrs-adenike-olufade.png',
-      bio: 'Leading expert in professional ethics and standards with extensive experience in regulatory compliance and quality assurance.'
+      name: 'Mr. Gabriel Okoli, FCSTM',
+      role: 'Council Member',
+      image: '/uploads/images/council/mr-gabriel-okoli.png',
+      bio: 'A dedicated professional with a strong commitment to enhancing customer service standards and trade management.'
     },
   ];
 
@@ -81,7 +87,7 @@ const About: React.FC = () => {
     {
       icon: Award,
       title: 'Excellence',
-      description: 'We strive for the highest standards in everything we do, promoting excellence across all professional disciplines.'
+      description: 'We strive for the highest standards in customer service and trade management, promoting excellence across all professional disciplines.'
     },
     {
       icon: Users,
@@ -91,12 +97,12 @@ const About: React.FC = () => {
     {
       icon: Globe,
       title: 'Innovation',
-      description: 'We embrace change and foster innovative approaches to professional development and industry advancement.'
+      description: 'We embrace change and foster innovative approaches to customer service excellence and trade management practices.'
     },
     {
       icon: TrendingUp,
       title: 'Growth',
-      description: 'We are committed to continuous improvement and the professional growth of our members and the broader community.'
+      description: 'We are committed to continuous improvement and the professional growth of our members and the broader business community.'
     }
   ];
 
@@ -108,8 +114,13 @@ const About: React.FC = () => {
           <div className="text-center">
             <h1 className="text-5xl font-bold mb-6">About Our Institute</h1>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-              Established in 1985, the Nigerian Professional Institute has been at the forefront of 
-              professional development, setting standards, and fostering excellence across various industries in Nigeria.
+              The Institute of Strategic Customer Service and Trade Management (ICSTM) is a professional body registered under the Companies and Allied Matters Act of 1990, Federal Republic of Nigeria. Fully approved by the Federal Ministry of Education and the Ministry of Justice, the Institute is dedicated to advancing the profession of trade management and customer service across Nigeria and beyond.
+              <br /><br />
+              ICSTM brings together stakeholders, organizes conferences, and conducts focus groups to promote the development of trade management and related industries. Our mission is to drive customer service to the center of business, helping organizations exceed customer expectations and serve the needs of all stakeholders in both the private and public sectors.
+              <br /><br />
+              Through research, training, development programs, accreditation, certification, publications, and awards, the Institute provides tools and strategies for service excellence. Our goal is to build, promote, and develop professionals in business, e-commerce, import and export, market intelligence, trade policy, and finance from a practical, global, and customer-driven perspective.
+              <br /><br />
+              We are committed to improving knowledge, advancing careers, and fostering excellence in customer experience and trade management.
             </p>
           </div>
         </div>
@@ -125,9 +136,9 @@ const About: React.FC = () => {
                 <h2 className="text-3xl font-bold text-gray-900">Our Mission</h2>
               </div>
               <p className="text-gray-700 text-lg leading-relaxed">
-                To advance professional excellence by providing world-class education, certification, 
-                and development opportunities that empower individuals and organizations to achieve 
-                their highest potential while maintaining the highest ethical standards.
+                To build the prefrered professionals committed to the development and transformation of customer experience and trade related activities.
+                We achieve this through comprehensive training, certification programs, and a commitment to the highest standards of professional excellence,
+                ensuring our members are equipped to meet the evolving demands of the industry and contribute positively to their communities.
               </p>
             </div>
             
@@ -137,9 +148,19 @@ const About: React.FC = () => {
                 <h2 className="text-3xl font-bold text-gray-900">Our Vision</h2>
               </div>
               <p className="text-gray-700 text-lg leading-relaxed">
-                To be Nigeria's premier professional institute, recognized globally for our commitment 
-                to excellence, innovation, and the development of world-class professionals who drive 
-                positive change in their communities and industries.
+                To be a front line body that is idenified with pursuit of excellence in the area of customer service and trade management throught innovations and guided principles.
+                We envision a future where our members lead the way in customer service and trade management, setting benchmarks for quality and professionalism that inspire others across
+                Nigeria and beyond. Our vision is to create a vibrant community of professionals who are dedicated to continuous learning, ethical practices, and the advancement of our industry.
+              </p>
+            </div>
+          
+            <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 rounded-2xl col-span-full">
+              <div className="flex items-center mb-6">
+                <Users className="w-8 h-8 text-yellow-600 mr-3" />
+                <h2 className="text-3xl font-bold text-gray-900">Our Mandate</h2>
+              </div>
+              <p className="text-gray-700 text-lg leading-relaxed">
+                To develop problem solving skills and capacity of its members and other professionals that is involved in the pratice of customer service and trade management.
               </p>
             </div>
           </div>
@@ -176,7 +197,7 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      {/* Council Section */}
+      {/* Council Members Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -185,21 +206,23 @@ const About: React.FC = () => {
               Meet the experienced professionals who guide our institute's strategic direction and ensure our commitment to excellence.
             </p>
           </div>
-          {/* Responsive grid: 2 on mobile, 4 on md, 5 on lg+ */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            {leaders.map((leader, index) => (
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            {councilMembers.map((member, index) => (
               <div
                 key={index}
-                className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col items-center p-4"
+                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
               >
                 <img
-                  src={leader.image}
-                  alt={leader.name}
-                  className="w-20 h-20 rounded-full object-cover mb-3 border-2 border-blue-100"
+                  src={member.image}
+                  alt={member.name}
+                  className="w-full h-48 object-cover"
                 />
-                <h3 className="text-base font-bold text-gray-900 text-center">{leader.name}</h3>
-                <p className="text-blue-600 font-medium text-xs text-center mb-2">{leader.role || leader.position}</p>
-                <p className="text-gray-500 text-xs text-center line-clamp-4">{leader.bio}</p>
+                <div className="p-4">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{member.name}</h3>
+                  <p className="text-blue-600 font-semibold mb-3 text-sm">{member.role}</p>
+                  <p className="text-gray-600 text-xs leading-relaxed">{member.bio}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -212,7 +235,7 @@ const About: React.FC = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Journey</h2>
             <p className="text-xl text-gray-600">
-              Four decades of professional excellence and continuous growth.
+              A timeline of our significant milestones and achievements since our inception, showcasing our growth and commitment to excellence in customer service and trade management.
             </p>
           </div>
           
@@ -220,12 +243,12 @@ const About: React.FC = () => {
             <div className="bg-white p-8 rounded-2xl shadow-lg">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                  1985
+                  1990
                 </div>
                 <div className="ml-6">
                   <h3 className="text-xl font-bold text-gray-900">Foundation</h3>
                   <p className="text-gray-600">
-                    Established as Nigeria's premier professional development institute with 50 founding members.
+                    Establish of the Institute of Strategic Customer Service and Trade Management (ICSTM) to promote, develop excellence in customer service and trade management.
                   </p>
                 </div>
               </div>
@@ -239,7 +262,7 @@ const About: React.FC = () => {
                 <div className="ml-6">
                   <h3 className="text-xl font-bold text-gray-900">National Recognition</h3>
                   <p className="text-gray-600">
-                    Gained official recognition from the Federal Government and expanded to 5,000 members across all states.
+                    Gained official recognition from the Federal Government and expanded membership all over Nigeria.
                   </p>
                 </div>
               </div>
@@ -253,7 +276,7 @@ const About: React.FC = () => {
                 <div className="ml-6">
                   <h3 className="text-xl font-bold text-gray-900">Digital Transformation</h3>
                   <p className="text-gray-600">
-                    Launched online certification programs and digital member services, reaching 15,000 members.
+                    Launched online certification programs and digital member services, reaching lots of members.
                   </p>
                 </div>
               </div>
@@ -262,12 +285,12 @@ const About: React.FC = () => {
             <div className="bg-white p-8 rounded-2xl shadow-lg">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                  2024
+                  2016
                 </div>
                 <div className="ml-6">
                   <h3 className="text-xl font-bold text-gray-900">Current Excellence</h3>
                   <p className="text-gray-600">
-                    Today, we proudly serve over 25,000 members with comprehensive professional development programs.
+                    Today, we proudly serve over 5000 members with comprehensive customer service and trade management programs.
                   </p>
                 </div>
               </div>

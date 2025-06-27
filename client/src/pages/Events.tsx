@@ -1,134 +1,24 @@
 import React, { useState } from 'react';
 import { Calendar, MapPin, Clock, Users, Filter, Search, CreditCard, ArrowRight } from 'lucide-react';
+import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import AuthModal from '../components/AuthModal';
 
 const Events: React.FC = () => {
+  const { events, registerForEvent } = useApp();
+  const { user } = useAuth();
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-
-  const events = [
-    {
-      id: 1,
-      title: 'Professional Development Workshop Series',
-      date: '2024-03-15',
-      time: '9:00 AM - 5:00 PM',
-      location: 'Lagos Business District, Lagos',
-      attendees: 150,
-      maxAttendees: 200,
-      category: 'workshop',
-      description: 'Comprehensive workshop covering leadership skills, project management, and career advancement strategies.',
-      image: 'https://images.pexels.com/photos/1181533/pexels-photo-1181533.jpeg?auto=compress&cs=tinysrgb&w=600&h=300&fit=crop',
-      price: 'Free for Members',
-      nonMemberPrice: '₦25,000',
-      status: 'upcoming',
-      agenda: [
-        '9:00 AM - Registration & Welcome',
-        '10:00 AM - Leadership in the Digital Age',
-        '12:00 PM - Lunch Break',
-        '1:00 PM - Project Management Best Practices',
-        '3:00 PM - Career Advancement Strategies',
-        '4:30 PM - Q&A Session',
-        '5:00 PM - Closing Remarks'
-      ]
-    },
-    {
-      id: 2,
-      title: 'Annual Professional Excellence Conference',
-      date: '2024-04-22',
-      time: '8:00 AM - 6:00 PM',
-      location: 'Transcorp Hilton, Abuja',
-      attendees: 500,
-      maxAttendees: 800,
-      category: 'conference',
-      description: 'Our flagship event bringing together industry leaders, experts, and professionals from across Nigeria.',
-      image: 'https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=600&h=300&fit=crop',
-      price: '₦15,000',
-      nonMemberPrice: '₦35,000',
-      status: 'upcoming',
-      agenda: [
-        '8:00 AM - Registration & Breakfast',
-        '9:00 AM - Opening Keynote',
-        '10:30 AM - Panel Discussion: Future of Work',
-        '12:00 PM - Networking Lunch',
-        '2:00 PM - Breakout Sessions',
-        '4:00 PM - Awards Ceremony',
-        '5:30 PM - Closing Reception'
-      ]
-    },
-    {
-      id: 3,
-      title: 'Digital Transformation in Professional Services',
-      date: '2024-05-10',
-      time: '2:00 PM - 6:00 PM',
-      location: 'Virtual Event',
-      attendees: 300,
-      maxAttendees: 500,
-      category: 'webinar',
-      description: 'Explore how digital technologies are reshaping professional services and learn adaptation strategies.',
-      image: 'https://images.pexels.com/photos/3184298/pexels-photo-3184298.jpeg?auto=compress&cs=tinysrgb&w=600&h=300&fit=crop',
-      price: 'Free',
-      nonMemberPrice: '₦10,000',
-      status: 'upcoming',
-      agenda: [
-        '2:00 PM - Welcome & Introductions',
-        '2:15 PM - Digital Transformation Overview',
-        '3:00 PM - Case Studies & Success Stories',
-        '4:00 PM - Interactive Q&A',
-        '4:30 PM - Implementation Strategies',
-        '5:30 PM - Wrap-up & Next Steps'
-      ]
-    },
-    {
-      id: 4,
-      title: 'Ethics in Professional Practice Seminar',
-      date: '2024-06-05',
-      time: '10:00 AM - 4:00 PM',
-      location: 'University of Lagos, Lagos',
-      attendees: 200,
-      maxAttendees: 250,
-      category: 'seminar',
-      description: 'Deep dive into ethical considerations and best practices for maintaining professional integrity.',
-      image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600&h=300&fit=crop',
-      price: '₦10,000',
-      nonMemberPrice: '₦20,000',
-      status: 'upcoming',
-      agenda: [
-        '10:00 AM - Registration',
-        '10:30 AM - Ethics Framework Overview',
-        '12:00 PM - Lunch Break',
-        '1:00 PM - Case Study Analysis',
-        '2:30 PM - Group Discussions',
-        '3:30 PM - Best Practices Presentation',
-        '4:00 PM - Closing'
-      ]
-    },
-    {
-      id: 5,
-      title: 'Young Professionals Networking Night',
-      date: '2024-03-28',
-      time: '6:00 PM - 9:00 PM',
-      location: 'The Wheatbaker Hotel, Lagos',
-      attendees: 100,
-      maxAttendees: 150,
-      category: 'networking',
-      description: 'Connect with other young professionals and build meaningful relationships in a relaxed environment.',
-      image: 'https://images.pexels.com/photos/1181677/pexels-photo-1181677.jpeg?auto=compress&cs=tinysrgb&w=600&h=300&fit=crop',
-      price: '₦5,000',
-      nonMemberPrice: '₦15,000',
-      status: 'upcoming',
-      agenda: [
-        '6:00 PM - Welcome Reception',
-        '6:30 PM - Icebreaker Activities',
-        '7:00 PM - Networking Dinner',
-        '8:00 PM - Speed Networking',
-        '8:30 PM - Open Networking',
-        '9:00 PM - Event Wrap-up'
-      ]
-    }
-  ];
+  const [registrationForm, setRegistrationForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    organization: '',
+    membershipStatus: ''
+  });
 
   const categories = [
     { key: 'all', label: 'All Events' },
@@ -143,7 +33,8 @@ const Events: React.FC = () => {
     const matchesCategory = activeFilter === 'all' || event.category === activeFilter;
     const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          event.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
+    const isPublished = event.status === 'published';
+    return matchesCategory && matchesSearch && isPublished;
   });
 
   const formatDate = (dateString: string) => {
@@ -158,14 +49,50 @@ const Events: React.FC = () => {
 
   const handleEventRegistration = (event: any) => {
     setSelectedEvent(event);
-    setIsRegistrationOpen(true);
+    if (user) {
+      setRegistrationForm({
+        name: user.name,
+        email: user.email,
+        phone: user.phone || '',
+        organization: user.organization || '',
+        membershipStatus: 'member'
+      });
+      setIsRegistrationOpen(true);
+    } else {
+      setIsAuthModalOpen(true);
+    }
   };
 
   const handleRegistrationSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Check if user is logged in, if not, show auth modal
+    
+    if (!user) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    // Register user for event
+    registerForEvent(selectedEvent.id, user.id);
+    
+    // Close modal and show success
     setIsRegistrationOpen(false);
-    setIsAuthModalOpen(true);
+    alert('Successfully registered for the event!');
+    
+    // Reset form
+    setRegistrationForm({
+      name: '',
+      email: '',
+      phone: '',
+      organization: '',
+      membershipStatus: ''
+    });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setRegistrationForm({
+      ...registrationForm,
+      [e.target.name]: e.target.value
+    });
   };
 
   return (
@@ -242,15 +169,13 @@ const Events: React.FC = () => {
                       className="w-full h-48 object-cover"
                     />
                     <div className="absolute top-4 right-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        event.status === 'upcoming' ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {event.status === 'upcoming' ? 'Upcoming' : 'Past Event'}
+                      <span className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-semibold">
+                        {event.status === 'published' ? 'Available' : 'Draft'}
                       </span>
                     </div>
                     <div className="absolute bottom-4 left-4">
                       <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
-                        {event.attendees}/{event.maxAttendees} registered
+                        {event.currentAttendees}/{event.maxAttendees} registered
                       </span>
                     </div>
                   </div>
@@ -280,7 +205,7 @@ const Events: React.FC = () => {
                       </div>
                       <div className="flex items-center text-sm text-gray-500">
                         <Users className="w-4 h-4 mr-2" />
-                        {event.attendees} attendees
+                        {event.currentAttendees} attendees
                       </div>
                     </div>
                     
@@ -299,14 +224,10 @@ const Events: React.FC = () => {
                     
                     <button
                       onClick={() => handleEventRegistration(event)}
-                      className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
-                        event.status === 'upcoming'
-                          ? 'bg-blue-600 text-white hover:bg-blue-700'
-                          : 'bg-gray-200 text-gray-600 cursor-not-allowed'
-                      }`}
-                      disabled={event.status !== 'upcoming'}
+                      className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                      disabled={event.currentAttendees >= event.maxAttendees}
                     >
-                      {event.status === 'upcoming' ? 'Register Now' : 'Event Ended'}
+                      {event.currentAttendees >= event.maxAttendees ? 'Event Full' : 'Register Now'}
                     </button>
                   </div>
                 </div>
@@ -357,21 +278,9 @@ const Events: React.FC = () => {
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
                     <Users className="w-4 h-4 mr-2" />
-                    {selectedEvent.attendees}/{selectedEvent.maxAttendees}
+                    {selectedEvent.currentAttendees}/{selectedEvent.maxAttendees}
                   </div>
                 </div>
-              </div>
-
-              <div className="mb-6">
-                <h4 className="font-semibold text-gray-900 mb-3">Event Agenda</h4>
-                <ul className="space-y-2">
-                  {selectedEvent.agenda.map((item: string, index: number) => (
-                    <li key={index} className="text-sm text-gray-600 flex items-start">
-                      <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
               </div>
 
               <form onSubmit={handleRegistrationSubmit} className="space-y-4">
@@ -382,9 +291,13 @@ const Events: React.FC = () => {
                     </label>
                     <input
                       type="text"
+                      name="name"
+                      value={registrationForm.name}
+                      onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Enter your full name"
                       required
+                      readOnly={!!user}
                     />
                   </div>
                   <div>
@@ -393,9 +306,13 @@ const Events: React.FC = () => {
                     </label>
                     <input
                       type="email"
+                      name="email"
+                      value={registrationForm.email}
+                      onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Enter your email"
                       required
+                      readOnly={!!user}
                     />
                   </div>
                 </div>
@@ -407,6 +324,9 @@ const Events: React.FC = () => {
                     </label>
                     <input
                       type="tel"
+                      name="phone"
+                      value={registrationForm.phone}
+                      onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Enter your phone number"
                       required
@@ -418,6 +338,9 @@ const Events: React.FC = () => {
                     </label>
                     <input
                       type="text"
+                      name="organization"
+                      value={registrationForm.organization}
+                      onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Your organization"
                     />
@@ -428,7 +351,13 @@ const Events: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Membership Status
                   </label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <select 
+                    name="membershipStatus"
+                    value={registrationForm.membershipStatus}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={!!user}
+                  >
                     <option value="">Select membership status</option>
                     <option value="member">Current Member</option>
                     <option value="non-member">Non-Member</option>
@@ -439,14 +368,10 @@ const Events: React.FC = () => {
                   <h4 className="font-semibold text-gray-900 mb-2">Registration Fee</h4>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Event Fee:</span>
-                    <span className="font-semibold text-gray-900">{selectedEvent.price}</span>
+                    <span className="font-semibold text-gray-900">
+                      {registrationForm.membershipStatus === 'member' ? selectedEvent.price : selectedEvent.nonMemberPrice}
+                    </span>
                   </div>
-                  {selectedEvent.nonMemberPrice !== selectedEvent.price && (
-                    <div className="flex justify-between items-center mt-1">
-                      <span className="text-gray-600">Non-member Fee:</span>
-                      <span className="font-semibold text-gray-900">{selectedEvent.nonMemberPrice}</span>
-                    </div>
-                  )}
                 </div>
 
                 <button
@@ -454,7 +379,7 @@ const Events: React.FC = () => {
                   className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-emerald-700 transition-all duration-300 flex items-center justify-center"
                 >
                   <CreditCard className="w-5 h-5 mr-2" />
-                  Proceed to Payment
+                  Complete Registration
                 </button>
               </form>
             </div>

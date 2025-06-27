@@ -27,9 +27,9 @@ const Contact: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Phone</h3>
                 <p className="text-gray-600 mb-2">General Inquiries</p>
-                <p className="text-blue-600 font-semibold">+234 (0) 1 234 5678</p>
+                <p className="text-blue-600 font-semibold">+234 (0) 8080060111</p>
                 <p className="text-gray-600 mt-2">Membership Services</p>
-                <p className="text-blue-600 font-semibold">+234 (0) 1 234 5679</p>
+                <p className="text-blue-600 font-semibold">+234 (0) 8167655723</p>
               </div>
 
               <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-2xl">
@@ -38,9 +38,9 @@ const Contact: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Email</h3>
                 <p className="text-gray-600 mb-2">General Information</p>
-                <p className="text-emerald-600 font-semibold">info@npi.org.ng</p>
+                <p className="text-emerald-600 font-semibold">info@icstmn.org.ng</p>
                 <p className="text-gray-600 mt-2">Membership</p>
-                <p className="text-emerald-600 font-semibold">membership@npi.org.ng</p>
+                <p className="text-emerald-600 font-semibold">membership@icstmn.org.ng</p>
               </div>
 
               <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-2xl">
@@ -49,8 +49,8 @@ const Contact: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Office Location</h3>
                 <p className="text-gray-600">
-                  123 Professional Boulevard<br />
-                  Victoria Island, Lagos<br />
+                  16A, Bodurin Caulcrik, Camp David Estaste, Caterpillar B/Stop,<br />
+                  Ogba, Ikeja, Lagos<br />
                   Nigeria
                 </p>
               </div>
@@ -249,7 +249,7 @@ const Contact: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
               <MessageSquare className="w-5 h-5 mr-2" />
-              Live Chat Support
+              Chat with Us
             </button>
             <button className="inline-flex items-center justify-center px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors">
               <Phone className="w-5 h-5 mr-2" />

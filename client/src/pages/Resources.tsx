@@ -9,119 +9,19 @@ import {
   Star,
   Calendar,
   User,
-  Tag
+  Tag,
+  Heart
 } from 'lucide-react';
+import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 
 const Resources: React.FC = () => {
+  const { resources, downloadResource, toggleFavoriteResource, getUserResources } = useApp();
+  const { user } = useAuth();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const resources = [
-    {
-      id: 1,
-      title: 'Professional Ethics Guidelines 2024',
-      description: 'Comprehensive guide to ethical practices and professional conduct standards for all members.',
-      category: 'guidelines',
-      type: 'PDF',
-      size: '2.5 MB',
-      downloads: 1250,
-      rating: 4.8,
-      date: '2024-01-15',
-      author: 'Ethics Committee',
-      featured: true
-    },
-    {
-      id: 2,
-      title: 'Industry Trends Report - Q1 2024',
-      description: 'Latest trends, insights, and forecasts across various professional sectors in Nigeria.',
-      category: 'research',
-      type: 'PDF',
-      size: '4.2 MB',
-      downloads: 890,
-      rating: 4.6,
-      date: '2024-02-01',
-      author: 'Research Team',
-      featured: true
-    },
-    {
-      id: 3,
-      title: 'Career Development Toolkit',
-      description: 'Essential tools and templates for career planning, goal setting, and professional growth.',
-      category: 'career',
-      type: 'ZIP',
-      size: '8.7 MB',
-      downloads: 2100,
-      rating: 4.9,
-      date: '2024-01-10',
-      author: 'Professional Development',
-      featured: false
-    },
-    {
-      id: 4,
-      title: 'Best Practices in Project Management',
-      description: 'Proven methodologies and frameworks for successful project delivery in Nigerian context.',
-      category: 'guidelines',
-      type: 'PDF',
-      size: '3.1 MB',
-      downloads: 1456,
-      rating: 4.7,
-      date: '2024-02-10',
-      author: 'Project Management Committee',
-      featured: false
-    },
-    {
-      id: 5,
-      title: 'Digital Skills Assessment Framework',
-      description: 'Comprehensive framework for assessing and developing digital competencies in the workplace.',
-      category: 'assessment',
-      type: 'PDF',
-      size: '1.8 MB',
-      downloads: 673,
-      rating: 4.5,
-      date: '2024-02-20',
-      author: 'Digital Innovation Team',
-      featured: false
-    },
-    {
-      id: 6,
-      title: 'Professional Networking Strategies',
-      description: 'Effective strategies for building and maintaining professional relationships and networks.',
-      category: 'career',
-      type: 'PDF',
-      size: '2.3 MB',
-      downloads: 987,
-      rating: 4.6,
-      date: '2024-01-28',
-      author: 'Member Services',
-      featured: false
-    },
-    {
-      id: 7,
-      title: 'Financial Planning for Professionals',
-      description: 'Guide to personal financial management, investment strategies, and retirement planning.',
-      category: 'finance',
-      type: 'PDF',
-      size: '5.4 MB',
-      downloads: 1834,
-      rating: 4.8,
-      date: '2024-02-05',
-      author: 'Financial Advisory Board',
-      featured: true
-    },
-    {
-      id: 8,
-      title: 'Leadership in the Modern Workplace',
-      description: 'Contemporary leadership approaches and techniques for effective team management.',
-      category: 'leadership',
-      type: 'PDF',
-      size: '3.7 MB',
-      downloads: 1299,
-      rating: 4.7,
-      date: '2024-01-22',
-      author: 'Leadership Institute',
-      featured: false
-    }
-  ];
+  const userResources = user ? getUserResources(user.id) : [];
 
   const categories = [
     { key: 'all', label: 'All Resources', count: resources.length },
@@ -137,10 +37,11 @@ const Resources: React.FC = () => {
     const matchesCategory = activeCategory === 'all' || resource.category === activeCategory;
     const matchesSearch = resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          resource.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
+    const isPublished = resource.status === 'published';
+    return matchesCategory && matchesSearch && isPublished;
   });
 
-  const featuredResources = resources.filter(resource => resource.featured);
+  const featuredResources = resources.filter(resource => resource.featured && resource.status === 'published');
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -149,6 +50,33 @@ const Resources: React.FC = () => {
       month: 'short', 
       day: 'numeric' 
     });
+  };
+
+  const handleDownload = (resource: any) => {
+    if (!user) {
+      alert('Please log in to download resources');
+      return;
+    }
+    
+    downloadResource(resource.id, user.id);
+    alert(`Downloaded: ${resource.title}`);
+  };
+
+  const handleToggleFavorite = (resource: any) => {
+    if (!user) {
+      alert('Please log in to save favorites');
+      return;
+    }
+    
+    toggleFavoriteResource(resource.id, user.id);
+  };
+
+  const isResourceFavorited = (resourceId: string) => {
+    return userResources.some(ur => ur.resourceId === resourceId && ur.isFavorite);
+  };
+
+  const hasDownloadedResource = (resourceId: string) => {
+    return userResources.some(ur => ur.resourceId === resourceId);
   };
 
   return (
@@ -175,7 +103,7 @@ const Resources: React.FC = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredResources.map((resource) => (
+            {featuredResources.slice(0, 3).map((resource) => (
               <div
                 key={resource.id}
                 className="bg-gradient-to-br from-blue-50 to-emerald-50 p-6 rounded-2xl border border-blue-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300"
@@ -200,10 +128,25 @@ const Resources: React.FC = () => {
                   </div>
                 </div>
                 
-                <button className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 text-white py-2 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-emerald-700 transition-colors flex items-center justify-center">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </button>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => handleDownload(resource)}
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-emerald-600 text-white py-2 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-emerald-700 transition-colors flex items-center justify-center"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download
+                  </button>
+                  <button 
+                    onClick={() => handleToggleFavorite(resource)}
+                    className={`p-2 rounded-lg border transition-colors ${
+                      isResourceFavorited(resource.id) 
+                        ? 'bg-red-50 border-red-200 text-red-600' 
+                        : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    <Heart className={`w-4 h-4 ${isResourceFavorited(resource.id) ? 'fill-current' : ''}`} />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -269,9 +212,14 @@ const Resources: React.FC = () => {
                       <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                         <FileText className="w-5 h-5 text-blue-600" />
                       </div>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Download className="w-4 h-4 mr-1" />
-                        {resource.downloads}
+                      <div className="flex items-center space-x-2">
+                        {hasDownloadedResource(resource.id) && (
+                          <span className="w-2 h-2 bg-emerald-500 rounded-full" title="Downloaded"></span>
+                        )}
+                        <div className="flex items-center text-sm text-gray-500">
+                          <Download className="w-4 h-4 mr-1" />
+                          {resource.downloads}
+                        </div>
                       </div>
                     </div>
                     
@@ -305,12 +253,22 @@ const Resources: React.FC = () => {
                     </div>
                     
                     <div className="flex gap-2">
-                      <button className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center">
+                      <button 
+                        onClick={() => handleDownload(resource)}
+                        className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+                      >
                         <Download className="w-4 h-4 mr-2" />
                         Download
                       </button>
-                      <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        <ExternalLink className="w-4 h-4 text-gray-600" />
+                      <button 
+                        onClick={() => handleToggleFavorite(resource)}
+                        className={`p-2 rounded-lg border transition-colors ${
+                          isResourceFavorited(resource.id) 
+                            ? 'bg-red-50 border-red-200 text-red-600' 
+                            : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                        }`}
+                      >
+                        <Heart className={`w-4 h-4 ${isResourceFavorited(resource.id) ? 'fill-current' : ''}`} />
                       </button>
                     </div>
                   </div>

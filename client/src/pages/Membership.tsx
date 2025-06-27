@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Award, 
-  Users, 
-  BookOpen, 
-  Calendar, 
-  Shield, 
-  Star,
-  CheckCircle,
-  ArrowRight,
-  CreditCard,
-  Download
-} from 'lucide-react';
+import { Award, Users, BookOpen, Calendar, Shield, Star, CheckCircle, ArrowRight, CreditCard, Download } from 'lucide-react';
 import AuthModal from '../components/AuthModal';
 
 const Membership: React.FC = () => {
@@ -39,7 +28,7 @@ const Membership: React.FC = () => {
     {
       id: 'associate',
       title: 'Associate Member',
-      price: '₦45,000',
+      price: '₦20,000',
       period: 'per year',
       description: 'Ideal for early-career professionals seeking growth and development.',
       features: [
@@ -58,7 +47,7 @@ const Membership: React.FC = () => {
     {
       id: 'full',
       title: 'Full Member',
-      price: '₦85,000',
+      price: '₦25,000',
       period: 'per year',
       description: 'Comprehensive membership for established professionals and leaders.',
       features: [
@@ -77,9 +66,27 @@ const Membership: React.FC = () => {
       badge: 'Most Popular'
     },
     {
+      id: 'fellow',
+      title: 'Fellow Member',
+      price: '₦50,000',
+      period: 'per year',
+      description: 'For distinguished professionals with significant contributions to the field.',
+      features: [
+        'All Full Member benefits',
+        'Recognition as a Fellow of the Institute',
+        'Invitation to exclusive fellow-only events',
+        'Eligibility for honorary awards',
+        'Leadership and speaking opportunities',
+        'Priority access to research and publications',
+        'Fellowship certificate and badge'
+      ],
+      color: 'border-indigo-200 hover:border-indigo-300',
+      badge: 'Prestige'
+    },
+    {
       id: 'corporate',
       title: 'Corporate Member',
-      price: '₦500,000',
+      price: '₦250,000',
       period: 'per year',
       description: 'Enterprise solution for organizations investing in team development.',
       features: [

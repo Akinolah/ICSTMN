@@ -8,26 +8,29 @@ import Events from './pages/Events';
 import Resources from './pages/Resources';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
-import Portal from './pages/Portal';
+import AdminPortal from './pages/AdminPortal';
 import { AuthProvider } from './context/AuthContext';
+import { AppProvider } from './context/AppContext';
 
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/membership" element={<Membership />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/portal" element={<Portal />} />
-          </Routes>
-        </Layout>
-      </Router>
+      <AppProvider>
+        <Router>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/membership" element={<Membership />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/resources" element={<Resources />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/admin" element={<AdminPortal />} />
+            </Routes>
+          </Layout>
+        </Router>
+      </AppProvider>
     </AuthProvider>
   );
 }

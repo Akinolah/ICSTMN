@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, User, Settings, FileText, Calendar, Users, Award, BookOpen, Shield, Home } from 'lucide-react';
+import { Menu, X, ChevronDown, User, Settings, FileText, Calendar, Users, Award, BookOpen, Shield, Home, UserCog } from 'lucide-react';
 import AuthModal from './AuthModal';
+import AdminAuthModal from './AdminAuthModal';
 
 // Image imports
 import logo from '../uploads/logo/logo.png';
@@ -10,6 +11,7 @@ const Navigation: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isAdminAuthModalOpen, setIsAdminAuthModalOpen] = useState(false);
   const location = useLocation();
 
   const navItems = [
@@ -19,7 +21,7 @@ const Navigation: React.FC = () => {
       href: '/about',
       dropdown: [
         { label: 'Our Mission', href: '/about#mission', icon: Award },
-        { label: 'Council', href: '/about#council', icon: Users },
+        { label: 'Council Members', href: '/about#council', icon: Users },
         { label: 'History', href: '/about#history', icon: BookOpen },
         { label: 'Code of Ethics', href: '/about#ethics', icon: Shield }
       ]
@@ -65,24 +67,28 @@ const Navigation: React.FC = () => {
     setIsAuthModalOpen(true);
   };
 
+  const handleAdminPortalClick = () => {
+    setIsAdminAuthModalOpen(true);
+  };
+
   return (
     <>
       <nav className="bg-white shadow-lg fixed w-full top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-8xl mx-auto px-5 sm:px-6 lg:px-9">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3">
+            <Link to="/" className="flex items-center space-x-1">
               <div className="w-28 h-28 flex items-center justify-center">
                 <img src={logo} alt="Institute Logo" className="w-20 h-20 rounded-full object-cover" />
               </div>
               <div className="hidden md:block">
                 <h1 className="text-xl font-bold text-blue-800">ICSTMN</h1>
-                {/*<p className="text-sm text-gray-600">Excellence in Professional Development</p>*/}
+                <p className="text-sm text-gray-600">Excellence in Service & Trade</p>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-8">
+            <div className="hidden lg:flex items-center space-x-5">
               {navItems.map((item) => (
                 <div key={item.label} className="relative group">
                   <Link
@@ -125,13 +131,20 @@ const Navigation: React.FC = () => {
               ))}
             </div>
 
-            {/* Member Portal Button */}
-            <div className="hidden lg:flex items-center">
+            {/* Portal Buttons */}
+            <div className="hidden lg:flex items-center space-x-2">
               <button
                 onClick={handleMemberPortalClick}
-                className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 transform hover:scale-105 shadow-lg"
+                className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-all duration-200"
               >
                 Member Portal
+              </button>
+              <button
+                onClick={handleAdminPortalClick}
+                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center"
+              >
+                <UserCog className="w-4 h-4 mr-2" />
+                Admin Portal
               </button>
             </div>
 
@@ -194,12 +207,18 @@ const Navigation: React.FC = () => {
                 </div>
               ))}
               
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-gray-200 space-y-2">
                 <button
                   onClick={handleMemberPortalClick}
-                  className="w-full px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-colors duration-200"
+                  className="w-full px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200"
                 >
                   Member Portal
+                </button>
+                <button
+                  onClick={handleAdminPortalClick}
+                  className="w-full px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-colors duration-200"
+                >
+                  Admin Portal
                 </button>
               </div>
             </div>
@@ -210,6 +229,11 @@ const Navigation: React.FC = () => {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
+      />
+
+      <AdminAuthModal
+        isOpen={isAdminAuthModalOpen}
+        onClose={() => setIsAdminAuthModalOpen(false)}
       />
     </>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useApp } from '../context/AppContext';
 import { 
   User, 
   Award, 
@@ -16,76 +17,65 @@ import {
   RefreshCw,
   Edit,
   Save,
-  X
+  X,
+  Heart,
+  Eye,
+  MapPin
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
+  const { events, resources, getUserEvents, getUserResources } = useApp();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [showRenewalModal, setShowRenewalModal] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: user?.name || 'Dr. Adebayo Ogundimu',
-    email: user?.email || 'adebayo@example.com',
-    phone: '+234 803 123 4567',
-    profession: 'Engineering',
-    organization: 'First Bank Nigeria',
-    address: '123 Victoria Island, Lagos'
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    profession: user?.profession || '',
+    organization: user?.organization || '',
+    address: user?.address || ''
   });
+
+  const userEvents = user ? getUserEvents(user.id) : [];
+  const userResources = user ? getUserResources(user.id) : [];
+  const registeredEvents = events.filter(event => 
+    userEvents.some(ue => ue.eventId === event.id)
+  );
+  const downloadedResources = resources.filter(resource => 
+    userResources.some(ur => ur.resourceId === resource.id)
+  );
+  const favoriteResources = resources.filter(resource => 
+    userResources.some(ur => ur.resourceId === resource.id && ur.isFavorite)
+  );
 
   const memberStats = [
     { label: 'Membership Type', value: user?.membershipType || 'Full Member', icon: Award },
-    { label: 'Member Since', value: 'January 2023', icon: Calendar },
-    { label: 'Completed Courses', value: '12', icon: BookOpen },
-    { label: 'Certificates Earned', value: '8', icon: Award }
+    { label: 'Member Since', value: user?.joinDate ? new Date(user.joinDate).getFullYear().toString() : '2023', icon: Calendar },
+    { label: 'Events Registered', value: userEvents.length.toString(), icon: Calendar },
+    { label: 'Resources Downloaded', value: userResources.length.toString(), icon: BookOpen }
   ];
 
   const recentActivities = [
-    {
-      title: 'Completed "Leadership in Digital Age" Course',
-      date: '2024-02-15',
-      type: 'course',
-      status: 'completed'
-    },
-    {
-      title: 'Registered for Annual Conference',
-      date: '2024-02-10',
-      type: 'event',
-      status: 'registered'
-    },
-    {
-      title: 'Downloaded Ethics Guidelines 2024',
-      date: '2024-02-08',
-      type: 'resource',
-      status: 'downloaded'
-    },
-    {
-      title: 'Professional Development Workshop',
-      date: '2024-02-05',
-      type: 'workshop',
-      status: 'attended'
-    }
-  ];
-
-  const upcomingEvents = [
-    {
-      title: 'Professional Development Workshop Series',
-      date: '2024-03-15',
-      time: '9:00 AM',
-      status: 'registered'
-    },
-    {
-      title: 'Annual Professional Excellence Conference',
-      date: '2024-04-22',
-      time: '8:00 AM',
-      status: 'interested'
-    },
-    {
-      title: 'Digital Transformation Webinar',
-      date: '2024-05-10',
-      time: '2:00 PM',
-      status: 'available'
-    }
-  ];
+    ...userEvents.slice(-3).map(ue => {
+      const event = events.find(e => e.id === ue.eventId);
+      return {
+        title: `Registered for "${event?.title}"`,
+        date: ue.registrationDate,
+        type: 'event',
+        status: 'registered'
+      };
+    }),
+    ...userResources.slice(-3).map(ur => {
+      const resource = resources.find(r => r.id === ur.resourceId);
+      return {
+        title: `Downloaded "${resource?.title}"`,
+        date: ur.downloadDate,
+        type: 'resource',
+        status: 'downloaded'
+      };
+    })
+  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
 
   const membershipPlans = [
     {
@@ -114,19 +104,6 @@ const Dashboard: React.FC = () => {
     }
   ];
 
-  const handleProfileUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle profile update logic here
-    setIsEditingProfile(false);
-    // Show success message
-  };
-
-  const handleMembershipRenewal = (planId: string) => {
-    // Handle membership renewal logic here
-    setShowRenewalModal(false);
-    // Show success message
-  };
-
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -137,6 +114,29 @@ const Dashboard: React.FC = () => {
       </div>
     );
   }
+
+  const handleProfileUpdate = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateUser(profileData);
+    setIsEditingProfile(false);
+    alert('Profile updated successfully!');
+  };
+
+  const handleMembershipRenewal = (planId: string) => {
+    const plan = membershipPlans.find(p => p.id === planId);
+    if (plan) {
+      updateUser({ membershipType: plan.title });
+      setShowRenewalModal(false);
+      alert(`Membership renewed to ${plan.title}!`);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setProfileData({
+      ...profileData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -152,7 +152,7 @@ const Dashboard: React.FC = () => {
               <button className="p-2 text-gray-400 hover:text-gray-600 relative">
                 <Bell className="w-6 h-6" />
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-                  3
+                  {recentActivities.length}
                 </span>
               </button>
               <button
@@ -193,60 +193,92 @@ const Dashboard: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-6">Recent Activities</h2>
               <div className="space-y-4">
-                {recentActivities.map((activity, index) => (
-                  <div key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-                      <CheckCircle className="w-5 h-5 text-emerald-600" />
+                {recentActivities.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">No recent activities</p>
+                ) : (
+                  recentActivities.map((activity, index) => (
+                    <div key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                      <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                        <CheckCircle className="w-5 h-5 text-emerald-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-900">{activity.title}</h4>
+                        <p className="text-sm text-gray-600">{new Date(activity.date).toLocaleDateString()}</p>
+                      </div>
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        activity.status === 'registered' ? 'bg-blue-100 text-blue-800' :
+                        activity.status === 'downloaded' ? 'bg-emerald-100 text-emerald-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {activity.status}
+                      </span>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900">{activity.title}</h4>
-                      <p className="text-sm text-gray-600">{new Date(activity.date).toLocaleDateString()}</p>
-                    </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      activity.status === 'completed' ? 'bg-emerald-100 text-emerald-800' :
-                      activity.status === 'registered' ? 'bg-blue-100 text-blue-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {activity.status}
-                    </span>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
 
-            {/* Progress Tracking */}
+            {/* Registered Events */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Professional Development Progress</h2>
-              <div className="space-y-6">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-gray-700">Certification Progress</span>
-                    <span className="text-sm text-gray-500">75%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-blue-500 to-emerald-500 h-2 rounded-full" style={{ width: '75%' }}></div>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-gray-700">Annual Learning Goals</span>
-                    <span className="text-sm text-gray-500">60%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full" style={{ width: '60%' }}></div>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-gray-700">Networking Events</span>
-                    <span className="text-sm text-gray-500">40%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full" style={{ width: '40%' }}></div>
-                  </div>
-                </div>
+              <h2 className="text-xl font-bold text-gray-900 mb-6">My Events</h2>
+              <div className="space-y-4">
+                {registeredEvents.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">No registered events</p>
+                ) : (
+                  registeredEvents.map((event) => (
+                    <div key={event.id} className="border border-gray-200 rounded-lg p-4">
+                      <h4 className="font-medium text-gray-900 mb-2">{event.title}</h4>
+                      <div className="flex items-center text-sm text-gray-600 mb-2">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        {new Date(event.date).toLocaleDateString()}
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600 mb-3">
+                        <MapPin className="w-4 h-4 mr-2" />
+                        {event.location}
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600 mb-3">
+                        <Clock className="w-4 h-4 mr-2" />
+                        {event.time}
+                      </div>
+                      <span className="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full text-xs font-medium">
+                        Registered
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Downloaded Resources */}
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-6">My Resources</h2>
+              <div className="space-y-4">
+                {downloadedResources.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">No downloaded resources</p>
+                ) : (
+                  downloadedResources.map((resource) => {
+                    const userResource = userResources.find(ur => ur.resourceId === resource.id);
+                    return (
+                      <div key={resource.id} className="border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h4 className="font-medium text-gray-900 mb-2">{resource.title}</h4>
+                            <p className="text-sm text-gray-600 mb-2">{resource.description}</p>
+                            <div className="flex items-center text-sm text-gray-500">
+                              <span>{resource.type} • {resource.size}</span>
+                              {userResource?.isFavorite && (
+                                <Heart className="w-4 h-4 ml-2 text-red-500 fill-current" />
+                              )}
+                            </div>
+                          </div>
+                          <button className="ml-4 p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                            <Download className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
           </div>
@@ -259,10 +291,10 @@ const Dashboard: React.FC = () => {
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <User className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">{profileData.name}</h3>
-                <p className="text-gray-600">{profileData.email}</p>
+                <h3 className="text-xl font-bold text-gray-900">{user.name}</h3>
+                <p className="text-gray-600">{user.email}</p>
                 <p className="text-sm text-blue-600 font-medium mt-2">{user.membershipType}</p>
-                <p className="text-xs text-gray-500 mt-1">Expires: December 31, 2024</p>
+                <p className="text-xs text-gray-500 mt-1">Member since {new Date(user.joinDate).getFullYear()}</p>
               </div>
               
               <div className="space-y-3">
@@ -284,33 +316,22 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Upcoming Events */}
+            {/* Quick Stats */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Upcoming Events</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Stats</h3>
               <div className="space-y-4">
-                {upcomingEvents.map((event, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4">
-                    <h4 className="font-medium text-gray-900 mb-2">{event.title}</h4>
-                    <div className="flex items-center text-sm text-gray-600 mb-2">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      {new Date(event.date).toLocaleDateString()}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600 mb-3">
-                      <Clock className="w-4 h-4 mr-2" />
-                      {event.time}
-                    </div>
-                    <button className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-                      event.status === 'registered' 
-                        ? 'bg-emerald-100 text-emerald-800' 
-                        : event.status === 'interested'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}>
-                      {event.status === 'registered' ? 'Registered' : 
-                       event.status === 'interested' ? 'Mark Interested' : 'Register'}
-                    </button>
-                  </div>
-                ))}
+                <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                  <span className="text-blue-700 font-medium">Events Attended</span>
+                  <span className="text-blue-900 font-bold">{userEvents.filter(ue => ue.attendanceStatus === 'attended').length}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-emerald-50 rounded-lg">
+                  <span className="text-emerald-700 font-medium">Resources Downloaded</span>
+                  <span className="text-emerald-900 font-bold">{userResources.length}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-amber-50 rounded-lg">
+                  <span className="text-amber-700 font-medium">Favorite Resources</span>
+                  <span className="text-amber-900 font-bold">{favoriteResources.length}</span>
+                </div>
               </div>
             </div>
 
@@ -319,20 +340,20 @@ const Dashboard: React.FC = () => {
               <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
               <div className="space-y-3">
                 <button className="w-full text-left p-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors flex items-center">
-                  <BookOpen className="w-5 h-5 mr-3" />
-                  Browse Courses
+                  <Calendar className="w-5 h-5 mr-3" />
+                  Browse Events
                 </button>
                 <button className="w-full text-left p-3 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 transition-colors flex items-center">
-                  <Calendar className="w-5 h-5 mr-3" />
-                  View Events
+                  <BookOpen className="w-5 h-5 mr-3" />
+                  Explore Resources
                 </button>
                 <button className="w-full text-left p-3 bg-amber-50 text-amber-700 rounded-lg hover:bg-amber-100 transition-colors flex items-center">
-                  <Download className="w-5 h-5 mr-3" />
-                  Download Resources
-                </button>
-                <button className="w-full text-left p-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors flex items-center">
                   <Award className="w-5 h-5 mr-3" />
                   View Certificates
+                </button>
+                <button className="w-full text-left p-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors flex items-center">
+                  <Settings className="w-5 h-5 mr-3" />
+                  Account Settings
                 </button>
               </div>
             </div>
@@ -362,19 +383,25 @@ const Dashboard: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                   <input
                     type="text"
+                    name="name"
                     value={profileData.name}
-                    onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    readOnly
                   />
+                  <p className="text-xs text-gray-500 mt-1">Name cannot be changed</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                   <input
                     type="email"
+                    name="email"
                     value={profileData.email}
-                    onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    readOnly
                   />
+                  <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
                 </div>
               </div>
               
@@ -383,8 +410,9 @@ const Dashboard: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
                   <input
                     type="tel"
+                    name="phone"
                     value={profileData.phone}
-                    onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -392,8 +420,9 @@ const Dashboard: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Profession</label>
                   <input
                     type="text"
+                    name="profession"
                     value={profileData.profession}
-                    onChange={(e) => setProfileData({...profileData, profession: e.target.value})}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -403,8 +432,9 @@ const Dashboard: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Organization</label>
                 <input
                   type="text"
+                  name="organization"
                   value={profileData.organization}
-                  onChange={(e) => setProfileData({...profileData, organization: e.target.value})}
+                  onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -413,8 +443,9 @@ const Dashboard: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
                 <input
                   type="text"
+                  name="address"
                   value={profileData.address}
-                  onChange={(e) => setProfileData({...profileData, address: e.target.value})}
+                  onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -459,7 +490,7 @@ const Dashboard: React.FC = () => {
             <div className="p-6">
               <div className="mb-6 p-4 bg-blue-50 rounded-lg">
                 <h3 className="font-semibold text-blue-900 mb-2">Current Membership</h3>
-                <p className="text-blue-700">Full Member - Expires December 31, 2024</p>
+                <p className="text-blue-700">{user.membershipType} - Member since {new Date(user.joinDate).getFullYear()}</p>
               </div>
               
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose Renewal Plan</h3>

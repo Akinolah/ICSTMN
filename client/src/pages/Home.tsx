@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Award, Users, BookOpen, TrendingUp, Shield, Globe, ArrowRight, CheckCircle, Star, Calendar, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 
-
 const Home: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const heroSlides = [
     {
-      image: "/uploads/images/admin_photo.png",
+      image: '/uploads/images/admin_photo.png',
       title: 'Advancing Professional Excellence',
       subtitle: 'Join Nigeria\'s premier professional institute dedicated to elevating standards and creating lasting impact.',
       cta: 'Become a Member'
@@ -30,6 +29,12 @@ const Home: React.FC = () => {
       title: 'Excellence in every interaction',
       subtitle: 'Unwavering commitment to Quality in public and private sectors. We foster a culture of continuous improvement, empowering professionals to achieve their highest potential. Join us in setting in your field.',
       cta: 'Discover Our Programs'
+    },
+    {
+      image: 'https://images.pexels.com/photos/1181677/pexels-photo-1181677.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop',
+      title: 'Building Future Leaders',
+      subtitle: 'Develop leadership skills and advance your career in customer service and trade management.',
+      cta: 'Start Journey'
     }
   ];
 
@@ -37,13 +42,13 @@ const Home: React.FC = () => {
     {
       icon: Award,
       title: 'Professional Certification',
-      description: 'Advance your career with internationally recognized certifications and credentials.',
+      description: 'Advance your career with internationally recognized certifications in customer service and trade management.',
       color: 'bg-blue-500'
     },
     {
       icon: Users,
       title: 'Networking Community',
-      description: 'Connect with thousands of professionals across various industries in Nigeria.',
+      description: 'Connect with thousands of professionals across customer service and trade management industries.',
       color: 'bg-emerald-500'
     },
     {
@@ -51,11 +56,11 @@ const Home: React.FC = () => {
       title: 'Continuous Learning',
       description: 'Access world-class educational resources and professional development programs.',
       color: 'bg-amber-500'
-    },
+    }, 
     {
       icon: Shield,
       title: 'Ethical Standards',
-      description: 'Uphold the highest standards of professional ethics and integrity.',
+      description: 'Uphold the highest standards of professional ethics in customer service and trade practices.',
       color: 'bg-purple-500'
     }
   ];
@@ -83,6 +88,16 @@ const Home: React.FC = () => {
       role: "Director General",
       image: "/uploads/images/council/prof-akin-babatunde.png"
     },
+    {
+      name: "Chief Steve Okonmah, FCSTM",
+      role: "Chairman Body of Fellows",
+      image: "/uploads/images/council/chief-steve.png"
+    },
+    {
+      name: 'Mr. Eugene Nweke, FCSTM',
+      role: 'Patron',
+      image: '/uploads/images/council/mr-eugene-nweke.png',
+    }
   ];
 
   const testimonials = [
@@ -138,7 +153,7 @@ const Home: React.FC = () => {
             />
             <div className="absolute inset-0 bg-black bg-opacity-50" />
             
-            <div className="relative h-full flex items-center justify-center text-center text-white px-3">
+            <div className="relative h-full flex items-center justify-center text-center text-white px-4">
               <div className="max-w-4xl mx-auto">
                 <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
                   {slide.title}
@@ -186,7 +201,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* Stats Overlay */}
-        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4">
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4">
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {stats.map((stat, index) => (
@@ -208,8 +223,8 @@ const Home: React.FC = () => {
               Why Choose Our Institute?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We provide comprehensive professional development opportunities that empower 
-              individuals and organizations to achieve excellence in their respective fields.
+              We provide comprehensive professional development opportunities in customer service 
+              and trade management that empower individuals and organizations to achieve excellence.
             </p>
           </div>
           
@@ -236,38 +251,39 @@ const Home: React.FC = () => {
       {/* Council Members Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Meet Our Council Members</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              The leadership team guiding our institute’s vision and mission.
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Our Council Members
+            </h2>
+            <p className="text-xl text-gray-600">
+              Meet the experienced professionals who guide our institute's strategic direction.
             </p>
           </div>
-          <div className="flex flex-wrap justify-center gap-8">
-            {councilMembers.map((member, idx) => (
-              <div key={idx} className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center w-64">
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+            {councilMembers.map((member, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+              >
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-32 h-32 rounded-full object-cover mb-4 border-4 border-blue-100"
+                  className="w-full h-48 object-cover"
                 />
-                <h4 className="font-bold text-gray-900 text-lg text-center">{member.name}</h4>
-                <p className="text-blue-600 font-medium text-center">{member.role}</p>
+                <div className="p-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{member.name}</h3>
+                  <p className="text-blue-600 font-semibold mb-3 text-sm">{member.position}</p>
+                  <p className="text-gray-600 text-sm leading-relaxed">{member.bio}</p>
+                </div>
               </div>
             ))}
-          </div>
-          <div className="text-center mt-10">
-            <Link
-              to="/about"
-              className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              View All Council Members
-            </Link>
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -308,7 +324,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Latest News/Events Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
             <div>
@@ -328,7 +344,7 @@ const Home: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
               <img
                 src="https://images.pexels.com/photos/1181533/pexels-photo-1181533.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&fit=crop"
-                alt="Professional Development Workshop"
+                alt="Customer Service Excellence Workshop"
                 className="w-full h-48 object-cover"
               />
               <div className="p-6">
@@ -337,10 +353,10 @@ const Home: React.FC = () => {
                   March 15, 2024
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Professional Development Workshop Series
+                  Customer Service Excellence Workshop
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Join us for comprehensive workshops designed to enhance your professional skills and advance your career.
+                  Join us for comprehensive workshops designed to enhance your customer service skills and advance your career.
                 </p>
                 <Link
                   to="/events"
@@ -355,7 +371,7 @@ const Home: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
               <img
                 src="https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&fit=crop"
-                alt="Annual Conference"
+                alt="Annual Trade Management Conference"
                 className="w-full h-48 object-cover"
               />
               <div className="p-6">
@@ -364,10 +380,10 @@ const Home: React.FC = () => {
                   April 22, 2024
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Annual Professional Excellence Conference
+                  Annual Trade Management Conference
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Our flagship event bringing together industry leaders, experts, and professionals from across Nigeria.
+                  Our flagship event bringing together trade management experts and professionals from across Nigeria.
                 </p>
                 <Link
                   to="/events"
@@ -391,10 +407,10 @@ const Home: React.FC = () => {
                   Program Launch
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  New Digital Transformation Certification
+                  New Digital Customer Service Certification
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Introducing our latest certification program focused on digital transformation and modern business practices.
+                  Introducing our latest certification program focused on digital customer service and modern trade practices.
                 </p>
                 <Link
                   to="/membership"
@@ -417,7 +433,7 @@ const Home: React.FC = () => {
           </h2>
           <p className="text-xl text-blue-100 mb-8 leading-relaxed">
             Join thousands of professionals who have elevated their careers through our comprehensive 
-            programs, networking opportunities, and professional development resources.
+            customer service and trade management programs, networking opportunities, and professional development resources.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

@@ -1,102 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff, CreditCard, Check, ArrowLeft, Phone, MapPin, Briefcase, Calendar, Shield } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useApp } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedPlan?: string | null;
 }
-
-// Admin demo credentials for login
-const adminDemoCredentials = [
-  { email: 'admin1@ictng.org', password: 'Admin@1234' },
-  { email: 'admin2@ictng.org', password: 'Admin@1234' },
-  { email: 'admin3@ictng.org', password: 'Admin@1234' },
-  { email: 'admin4@ictng.org', password: 'Admin@1234' },
-  { email: 'admin5@ictng.org', password: 'Admin@1234' },
-];
-
-// Membership plans and prices
-const subscriptionPlans = [
-  {
-    id: 'student',
-    title: 'Student Member',
-    price: '₦15,000',
-    amount: 15000,
-    period: 'per year',
-    description: 'Perfect for students and recent graduates',
-    features: [
-      'Access to online resources',
-      'Student networking events',
-      'Career guidance sessions',
-      'Discounted workshop rates'
-    ]
-  },
-  {
-    id: 'associate',
-    title: 'Associate Member',
-    price: '₦20,000',
-    amount: 20000,
-    period: 'per year',
-    description: 'Ideal for early-career professionals',
-    features: [
-      'Full access to online resources',
-      'Professional networking events',
-      'Mentorship program access',
-      'Workshop discounts (25%)',
-      'Continuing education credits'
-    ],
-    popular: true
-  },
-  {
-    id: 'full',
-    title: 'Full Member',
-    price: '₦25,000',
-    amount: 25000,
-    period: 'per year',
-    description: 'Comprehensive membership for established professionals',
-    features: [
-      'Premium access to all resources',
-      'Exclusive leadership events',
-      'One-on-one mentoring',
-      'Free workshop attendance',
-      'Advanced certification programs'
-    ]
-  },
-  {
-    id: 'fellow',
-    title: 'Fellow Member',
-    price: '₦50,000',
-    amount: 50000,
-    period: 'per year',
-    description: 'For distinguished professionals',
-    features: [
-      'All Full Member benefits',
-      'Recognition as a Fellow',
-      'Special invitations to events'
-    ]
-  },
-  {
-    id: 'corporate',
-    title: 'Corporate Member',
-    price: '₦250,000',
-    amount: 250000,
-    period: 'per year',
-    description: 'Enterprise solution for organizations',
-    features: [
-      'Up to 50 individual memberships',
-      'Custom training programs',
-      'Dedicated account manager',
-      'On-site workshop delivery'
-    ]
-  }
-];
-
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api';// Frontend API base url configured in .env file
-
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: initialPlan = null }) => {
   const [currentStep, setCurrentStep] = useState<'login' | 'register' | 'subscription' | 'payment'>('login');
@@ -126,9 +38,107 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
     cardName: ''
   });
 
+  const { login } = useAuth();
+  const { addMember } = useApp();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  // Demo user credential
+  const demoUser = {
+    email: 'member@icstmn.org.ng',
+    password: 'member123'
+  };
+
+  const subscriptionPlans = [
+    {
+      id: 'student',
+      title: 'Student Member',
+      price: '₦15,000',
+      period: 'per year',
+      description: 'Perfect for students and recent graduates starting their professional journey.',
+      features: [
+        'Access to online resources',
+        'Student networking events',
+        'Career guidance sessions',
+        'Discounted workshop rates',
+        'Monthly newsletter',
+        'Basic certification eligibility'
+      ]
+    },
+    {
+      id: 'associate',
+      title: 'Associate Member',
+      price: '₦20,000',
+      period: 'per year',
+      description: 'Ideal for early-career professionals seeking growth and development.',
+      features: [
+        'Full access to online resources',
+        'Professional networking events',
+        'Mentorship program access',
+        'Workshop discounts (25%)',
+        'Continuing education credits',
+        'Professional certification eligibility',
+        'Job board access',
+        'Industry publications'
+      ]
+    },
+    {
+      id: 'full',
+      title: 'Full Member',
+      price: '₦25,000',
+      period: 'per year',
+      description: 'Comprehensive membership for established professionals and leaders.',
+      features: [
+        'Premium access to all resources',
+        'Exclusive leadership events',
+        'One-on-one mentoring',
+        'Free workshop attendance',
+        'Advanced certification programs',
+        'Speaking opportunities',
+        'Research collaboration access',
+        'Priority customer support',
+        'Annual conference inclusion',
+        'Professional directory listing'
+      ],
+      popular: true
+    },
+    {
+      id: 'fellow',
+      title: 'Fellow Member',
+      price: '₦50,000',
+      period: 'per year',
+      description: 'For distinguished professionals with significant contributions to the field.',
+      features: [
+        'All Full Member benefits',
+        'Recognition as a Fellow of the Institute',
+        'Invitation to exclusive fellow-only events',
+        'Eligibility for honorary awards',
+        'Leadership and speaking opportunities',
+        'Priority access to research and publications',
+        'Fellowship certificate and badge'
+      ]
+    },
+    {
+      id: 'corporate',
+      title: 'Corporate Member',
+      price: '₦250,000',
+      period: 'per year',
+      description: 'Enterprise solution for organizations investing in team development.',
+      features: [
+        'Up to 50 individual memberships',
+        'Custom training programs',
+        'Dedicated account manager',
+        'On-site workshop delivery',
+        'Corporate branding opportunities',
+        'Bulk certification discounts',
+        'Executive briefings',
+        'Industry trend reports',
+        'Partnership opportunities',
+        'Annual awards consideration'
+      ]
+    }
+  ];
+
+  React.useEffect(() => {
     if (initialPlan) {
       setSelectedPlan(initialPlan);
       setCurrentStep('register');
@@ -137,150 +147,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
 
   if (!isOpen) return null;
 
-  // Login handler (calls backend)
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Check if admin
-      const isAdmin = adminDemoCredentials.some(
-        cred => cred.email === formData.email && cred.password === formData.password
-      );
-      if (isAdmin) {
-        onClose();
-        navigate('/admin/dashboard');
-        return;
-      }
-
-      // Call backend login endpoint
-      const res = await axios.post(`${API_BASE}/auth/login`, {
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (res.data && res.data.token) {
-        localStorage.setItem('token', res.data.token);
+      if (formData.email === demoUser.email && formData.password === demoUser.password) {
+        await login(formData.email, formData.password, 'dashboard');
         onClose();
         navigate('/dashboard');
       } else {
-        alert('Invalid login credentials');
+        alert('Invalid credentials. Use demo account: member@icstmn.org.ng / member123');
       }
     } catch (error) {
-      alert('Login failed. Please check your credentials.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Registration handler (calls backend)
-  const handleRegistration = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Strict validation
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-    if (formData.password.length < 8) {
-      alert('Password must be at least 8 characters long');
-      return;
-    }
-    if (!formData.phone || formData.phone.length < 10) {
-      alert('Please provide a valid phone number');
-      return;
-    }
-    if (!formData.qualification) {
-      alert('Please provide your highest qualification');
-      return;
-    }
-    if (!formData.experience) {
-      alert('Please provide your years of experience');
-      return;
-    }
-    if (!formData.referenceOne || !formData.referenceTwo) {
-      alert('Please provide two professional references');
-      return;
-    }
-    if (!formData.agreeToTerms || !formData.agreeToCode) {
-      alert('Please agree to the terms and conditions and code of ethics');
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      // Call backend registration endpoint
-      const res = await axios.post(`${API_BASE}/auth/register`, {
-        ...formData,
-        membershipType: selectedPlan,
-      });
-
-      if (res.data && res.data.success) {
-        setCurrentStep('payment');
-      } else {
-        alert(res.data.message || 'Registration failed.');
-      }
-    } catch (error: any) {
-      alert(error.response?.data?.message || 'Registration failed.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Payment handler (calls backend/payment gateway)
-  const handlePayment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const plan = subscriptionPlans.find(p => p.id === selectedPlan);
-      // Call backend to initiate payment (replace with real payment gateway integration)
-      const paymentRes = await axios.post(`${API_BASE}/payments/initialize`, {
-        email: formData.email,
-        amount: plan?.amount,
-        membershipType: selectedPlan,
-        paymentData,
-      });
-
-      if (paymentRes.data && paymentRes.data.paymentUrl) {
-        // Redirect to payment gateway
-        window.location.href = paymentRes.data.paymentUrl;
-        return;
-      }
-
-      if (paymentRes.data && paymentRes.data.success) {
-        alert('Payment successful! Account activated.');
-        onClose();
-        navigate('/dashboard');
-        setCurrentStep('login');
-        setSelectedPlan(null);
-        setFormData({
-          name: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          phone: '',
-          profession: '',
-          address: '',
-          dateOfBirth: '',
-          qualification: '',
-          experience: '',
-          referenceOne: '',
-          referenceTwo: '',
-          agreeToTerms: false,
-          agreeToCode: false
-        });
-        setPaymentData({
-          cardNumber: '',
-          expiryDate: '',
-          cvv: '',
-          cardName: ''
-        });
-      } else {
-        alert(paymentRes.data.message || 'Payment failed.');
-      }
-    } catch (error: any) {
-      alert(error.response?.data?.message || 'Payment failed.');
+      console.error('Login error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -289,6 +169,123 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
   const handleSubscriptionSelect = (planId: string) => {
     setSelectedPlan(planId);
     setCurrentStep('register');
+  };
+
+  const handleRegistration = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Strict validation
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+    
+    if (formData.password.length < 8) {
+      alert('Password must be at least 8 characters long');
+      return;
+    }
+    
+    if (!formData.phone || formData.phone.length < 10) {
+      alert('Please provide a valid phone number');
+      return;
+    }
+    
+    if (!formData.qualification) {
+      alert('Please provide your highest qualification');
+      return;
+    }
+    
+    if (!formData.experience) {
+      alert('Please provide your years of experience');
+      return;
+    }
+    
+    if (!formData.referenceOne || !formData.referenceTwo) {
+      alert('Please provide two professional references');
+      return;
+    }
+    
+    if (!formData.agreeToTerms || !formData.agreeToCode) {
+      alert('Please agree to the terms and conditions and code of ethics');
+      return;
+    }
+    
+    setCurrentStep('payment');
+  };
+
+  const handlePayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      // Validate payment data
+      if (!paymentData.cardNumber || paymentData.cardNumber.length < 16) {
+        alert('Please enter a valid card number');
+        setIsLoading(false);
+        return;
+      }
+      
+      if (!paymentData.expiryDate || !paymentData.cvv || !paymentData.cardName) {
+        alert('Please fill in all payment details');
+        setIsLoading(false);
+        return;
+      }
+
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      // Get selected plan details
+      const plan = subscriptionPlans.find(p => p.id === selectedPlan);
+      
+      // Add member to the system
+      addMember({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        membershipType: plan?.title || 'Associate Member',
+        status: 'active',
+        joinDate: new Date().toISOString(),
+        profession: formData.profession,
+        organization: '',
+        address: formData.address,
+        paymentStatus: 'paid'
+      });
+      
+      // Create account after successful payment
+      await login(formData.email, formData.password, 'dashboard');
+      onClose();
+      navigate('/dashboard');
+      
+      // Reset form
+      setCurrentStep('login');
+      setSelectedPlan(null);
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        phone: '',
+        profession: '',
+        address: '',
+        dateOfBirth: '',
+        qualification: '',
+        experience: '',
+        referenceOne: '',
+        referenceTwo: '',
+        agreeToTerms: false,
+        agreeToCode: false
+      });
+      setPaymentData({
+        cardNumber: '',
+        expiryDate: '',
+        cvv: '',
+        cardName: ''
+      });
+    } catch (error) {
+      console.error('Payment error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -417,12 +414,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
               </div>
 
               <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                <p className="text-xs text-gray-600 font-medium mb-2">Admin Demo Credentials:</p>
-                {adminDemoCredentials.map((cred, idx) => (
-                  <div key={idx} className="text-xs text-gray-500">
-                    Email: {cred.email} | Password: {cred.password}
-                  </div>
-                ))}
+                <p className="text-xs text-gray-600 font-medium mb-2">Demo Credentials:</p>
+                <p className="text-xs text-gray-500">Email: member@icstmn.org.ng</p>
+                <p className="text-xs text-gray-500">Password: member123</p>
               </div>
             </form>
           )}
@@ -593,13 +587,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
                       required
                     >
                       <option value="">Select your profession</option>
-                      <option value="engineering">Engineering</option>
-                      <option value="medicine">Medicine</option>
-                      <option value="law">Law</option>
-                      <option value="accounting">Accounting</option>
-                      <option value="education">Education</option>
-                      <option value="business">Business</option>
-                      <option value="technology">Technology</option>
+                      <option value="customer-service">Customer Service</option>
+                      <option value="trade-management">Trade Management</option>
+                      <option value="business-development">Business Development</option>
+                      <option value="sales">Sales</option>
+                      <option value="marketing">Marketing</option>
+                      <option value="operations">Operations</option>
                       <option value="other">Other</option>
                     </select>
                   </div>
@@ -644,7 +637,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
               {/* References */}
               <div className="bg-gray-50 p-6 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <Users className="w-5 h-5 mr-2" />
+                  <User className="w-5 h-5 mr-2" />
                   Professional References
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -788,7 +781,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Cardholder Name
+                  Cardholder Name *
                 </label>
                 <input
                   type="text"
@@ -803,7 +796,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Card Number
+                  Card Number *
                 </label>
                 <div className="relative">
                   <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -815,6 +808,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     placeholder="1234 5678 9012 3456"
                     required
+                    minLength={16}
                   />
                 </div>
               </div>
@@ -822,7 +816,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Expiry Date
+                    Expiry Date *
                   </label>
                   <input
                     type="text"
@@ -837,7 +831,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    CVV
+                    CVV *
                   </label>
                   <input
                     type="text"
@@ -847,6 +841,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     placeholder="123"
                     required
+                    minLength={3}
+                    maxLength={4}
                   />
                 </div>
               </div>
@@ -861,6 +857,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
 
               <div className="text-center text-sm text-gray-500 mt-4">
                 <p>🔒 Your payment information is secure and encrypted</p>
+                <p className="mt-2 text-xs">Demo: Use any 16-digit card number for testing</p>
               </div>
             </form>
           )}
