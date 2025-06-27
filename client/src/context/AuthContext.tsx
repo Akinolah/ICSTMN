@@ -36,61 +36,81 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+// AuthProvider component to manage authentication state
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
 
-  const login = async (email: string, password: string, type: 'dashboard' | 'admin') => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    let mockUser: User;
-    
-    if (type === 'admin') {
-      // Admin users
-      const adminRoles: { [key: string]: string } = {
-        'admin@icstmn.org.ng': 'Super Admin',
-        'director@icstmn.org.ng': 'Director',
-        'manager@icstmn.org.ng': 'Manager',
-        'coordinator@icstmn.org.ng': 'Event Coordinator',
-        'content@icstmn.org.ng': 'Content Manager'
-      };
-      
-      mockUser = {
-        id: '1',
-        name: adminRoles[email] || 'Admin User',
-        email: email,
-        membershipType: 'Administrative',
-        role: adminRoles[email] || 'Admin',
-        joinDate: '2020-01-01',
-        status: 'active'
-      };
+  // Accepts { token, user } for real login, or fallback to demo
+  const login = async (
+    dataOrEmail: { token: string; user: User } | string,
+    password?: string,
+    type?: 'dashboard' | 'admin'
+  ) => {
+    if (typeof dataOrEmail === 'object' && dataOrEmail.token && dataOrEmail.user) {
+      setUser(dataOrEmail.user);
+      setToken(dataOrEmail.token);
+      localStorage.setItem('user', JSON.stringify(dataOrEmail.user));
+      localStorage.setItem('token', dataOrEmail.token);
     } else {
-      // Regular member
-      mockUser = {
-        id: '2',
-        name: 'Dr. Adebayo Ogundimu',
-        email: email,
-        membershipType: 'Full Member',
-        role: 'Member',
-        joinDate: '2023-01-15',
-        status: 'active',
-        phone: '+234 803 123 4567',
-        profession: 'Customer Service Manager',
-        organization: 'First Bank Nigeria',
-        address: '123 Victoria Island, Lagos'
-      };
+      // Demo or mock login fallback
+      const email = dataOrEmail as string;
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      let mockUser: User;
+      if (type === 'admin') {
+        const adminRoles: { [key: string]: string } = {
+          'admin@icstmn.org.ng': 'Super Admin',
+          'director@icstmn.org.ng': 'Director',
+          'manager@icstmn.org.ng': 'Manager',
+          'coordinator@icstmn.org.ng': 'Event Coordinator',
+          'content@icstmn.org.ng': 'Content Manager'
+        };
+        mockUser = {
+          id: '1',
+          name: adminRoles[email] || 'Admin User',
+          email: email,
+          membershipType: 'Administrative',
+          role: adminRoles[email] || 'Admin',
+          joinDate: '2020-01-01',
+          status: 'active'
+        };
+      } else {
+        mockUser = {
+          id: '2',
+          name: 'Dr. Adebayo Ogundimu',
+          email: email,
+          membershipType: 'Full Member',
+          role: 'Member',
+          joinDate: '2023-01-15',
+          status: 'active',
+          phone: '+234 803 123 4567',
+          profession: 'Customer Service Manager',
+          organization: 'First Bank Nigeria',
+          address: '123 Victoria Island, Lagos'
+        };
+      }
+      setUser(mockUser);
+      setToken('demo-token');
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      localStorage.setItem('token', 'demo-token');
     }
-    
-    setUser(mockUser);
   };
 
   const logout = () => {
     setUser(null);
+    setToken(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
   const updateUser = (userData: Partial<User>) => {
     if (user) {
-      setUser({ ...user, ...userData });
+      const updatedUser = { ...user, ...userData };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
     }
   };
 

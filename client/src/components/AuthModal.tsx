@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff, CreditCard, Check, ArrowLeft, Phone, MapPin, Briefcase, Calendar, Shield } from 'lucide-react';
+import { PaystackButton } from 'react-paystack';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedPlan?: string | null;
 }
+
+// Paystack public key for payment processing
+const PAYSTACK_PUBLIC_KEY = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY || '';
+
+// API URL for backend requests
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: initialPlan = null }) => {
   const [currentStep, setCurrentStep] = useState<'login' | 'register' | 'subscription' | 'payment'>('login');
@@ -147,20 +155,32 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
 
   if (!isOpen) return null;
 
+  // Function to handle login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
+  
     try {
+      // Demo login (for testing)
       if (formData.email === demoUser.email && formData.password === demoUser.password) {
         await login(formData.email, formData.password, 'dashboard');
         onClose();
         navigate('/dashboard');
-      } else {
-        alert('Invalid credentials. Use demo account: member@icstmn.org.ng / member123');
+        return;
       }
-    } catch (error) {
-      console.error('Login error:', error);
+  
+      // Real backend login
+      const res = await axios.post(`${API_URL}/auth/login`, {
+        email: formData.email,
+        password: formData.password,
+      });
+  
+      // You may want to use res.data.token and res.data.user here
+      await login(formData.email, formData.password, 'dashboard');
+      onClose();
+      navigate('/dashboard');
+    } catch (error: any) {
+      alert(error.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -170,93 +190,97 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
     setSelectedPlan(planId);
     setCurrentStep('register');
   };
-
-  const handleRegistration = (e: React.FormEvent) => {
+ 
+  const handleRegistration = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Strict validation
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match');
       return;
     }
-    
     if (formData.password.length < 8) {
       alert('Password must be at least 8 characters long');
       return;
     }
-    
     if (!formData.phone || formData.phone.length < 10) {
       alert('Please provide a valid phone number');
       return;
     }
-    
     if (!formData.qualification) {
       alert('Please provide your highest qualification');
       return;
     }
-    
     if (!formData.experience) {
       alert('Please provide your years of experience');
       return;
     }
-    
     if (!formData.referenceOne || !formData.referenceTwo) {
       alert('Please provide two professional references');
       return;
     }
-    
     if (!formData.agreeToTerms || !formData.agreeToCode) {
       alert('Please agree to the terms and conditions and code of ethics');
       return;
     }
-    
-    setCurrentStep('payment');
-  };
 
-  const handlePayment = async (e: React.FormEvent) => {
-    e.preventDefault();
     setIsLoading(true);
-
     try {
-      // Validate payment data
-      if (!paymentData.cardNumber || paymentData.cardNumber.length < 16) {
-        alert('Please enter a valid card number');
-        setIsLoading(false);
-        return;
-      }
-      
-      if (!paymentData.expiryDate || !paymentData.cvv || !paymentData.cardName) {
-        alert('Please fill in all payment details');
-        setIsLoading(false);
-        return;
-      }
-
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      // Get selected plan details
+      // Send registration data to backend
       const plan = subscriptionPlans.find(p => p.id === selectedPlan);
-      
-      // Add member to the system
-      addMember({
+      await axios.post(`${API_URL}/auth/register`, {
         name: formData.name,
         email: formData.email,
+        password: formData.password,
         phone: formData.phone,
-        membershipType: plan?.title || 'Associate Member',
-        status: 'active',
-        joinDate: new Date().toISOString(),
         profession: formData.profession,
-        organization: '',
         address: formData.address,
-        paymentStatus: 'paid'
+        dateOfBirth: formData.dateOfBirth,
+        qualification: formData.qualification,
+        experience: formData.experience,
+        referenceOne: formData.referenceOne,
+        referenceTwo: formData.referenceTwo,
+        membershipType: plan?.title || 'Associate Member',
       });
-      
-      // Create account after successful payment
+      setCurrentStep('payment');
+    } catch (error: any) {
+      alert(error.response?.data?.message || 'Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Function to handle Paystack payment success
+  const handlePaystackSuccess = async (reference: string) => {
+    setIsLoading(true);
+    try {
+      const plan = subscriptionPlans.find(p => p.id === selectedPlan);
+
+      // Send payment reference and user details to backend for verification and registration
+      await axios.post(`${API_URL}/payment/verify`, {
+        reference,
+        user: {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone,
+          profession: formData.profession,
+          address: formData.address,
+          dateOfBirth: formData.dateOfBirth,
+          qualification: formData.qualification,
+          experience: formData.experience,
+          referenceOne: formData.referenceOne,
+          referenceTwo: formData.referenceTwo,
+          membershipType: plan?.title || 'Associate Member',
+        }
+      });
+
+      // Optionally, log in the user after successful registration/payment
       await login(formData.email, formData.password, 'dashboard');
       onClose();
       navigate('/dashboard');
-      
-      // Reset form
+
+      // Reset form state
       setCurrentStep('login');
       setSelectedPlan(null);
       setFormData({
@@ -275,17 +299,28 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
         agreeToTerms: false,
         agreeToCode: false
       });
-      setPaymentData({
-        cardNumber: '',
-        expiryDate: '',
-        cvv: '',
-        cardName: ''
-      });
-    } catch (error) {
-      console.error('Payment error:', error);
+    } catch (error: any) {
+      alert(error.response?.data?.message || 'Payment verification failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Paystack config for the PaystackButton
+  const plan = subscriptionPlans.find(p => p.id === selectedPlan);
+  const paystackConfig = {
+    email: formData.email,
+    amount: Number(plan?.price.replace(/[^\d]/g, '')) * 100, // Convert to kobo
+    publicKey: PAYSTACK_PUBLIC_KEY,
+    metadata: {
+      name: formData.name,
+      phone: formData.phone,
+      membershipType: plan?.title,
+    },
+    text: isLoading ? 'Processing Payment...' : `Pay ${plan?.price} for ${plan?.title}`,
+    onSuccess: (response: any) => handlePaystackSuccess(response.reference),
+    onClose: () => alert('Payment was not completed. Please try again.'),
+    disabled: isLoading,
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -768,98 +803,22 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
             </form>
           )}
 
-          {/* Payment Form */}
+          {/* Payment Section */}
           {currentStep === 'payment' && (
-            <form onSubmit={handlePayment} className="space-y-4 max-w-2xl mx-auto">
+            <div className="space-y-4 max-w-2xl mx-auto">
               <div className="mb-6 p-4 bg-blue-50 rounded-lg">
                 <h4 className="font-semibold text-blue-900">Order Summary</h4>
                 <div className="flex justify-between items-center mt-2">
-                  <span className="text-blue-700">{subscriptionPlans.find(p => p.id === selectedPlan)?.title}</span>
-                  <span className="font-semibold text-blue-900">{subscriptionPlans.find(p => p.id === selectedPlan)?.price}</span>
+                  <span className="text-blue-700">{plan?.title}</span>
+                  <span className="font-semibold text-blue-900">{plan?.price}</span>
                 </div>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Cardholder Name *
-                </label>
-                <input
-                  type="text"
-                  name="cardName"
-                  value={paymentData.cardName}
-                  onChange={handlePaymentInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  placeholder="Name on card"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Card Number *
-                </label>
-                <div className="relative">
-                  <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    name="cardNumber"
-                    value={paymentData.cardNumber}
-                    onChange={handlePaymentInputChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="1234 5678 9012 3456"
-                    required
-                    minLength={16}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Expiry Date *
-                  </label>
-                  <input
-                    type="text"
-                    name="expiryDate"
-                    value={paymentData.expiryDate}
-                    onChange={handlePaymentInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="MM/YY"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    CVV *
-                  </label>
-                  <input
-                    type="text"
-                    name="cvv"
-                    value={paymentData.cvv}
-                    onChange={handlePaymentInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="123"
-                    required
-                    minLength={3}
-                    maxLength={4}
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-semibold rounded-lg hover:from-emerald-700 hover:to-emerald-800 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? 'Processing Payment...' : `Pay ${subscriptionPlans.find(p => p.id === selectedPlan)?.price}`}
-              </button>
-
+              <PaystackButton {...paystackConfig} className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-semibold rounded-lg hover:from-emerald-700 hover:to-emerald-800 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" />
               <div className="text-center text-sm text-gray-500 mt-4">
                 <p>🔒 Your payment information is secure and encrypted</p>
-                <p className="mt-2 text-xs">Demo: Use any 16-digit card number for testing</p>
+                <p className="mt-2 text-xs">You will be redirected after successful payment</p>
               </div>
-            </form>
+            </div>
           )}
         </div>
       </div>
