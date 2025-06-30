@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Award, Users, BookOpen, TrendingUp, Shield, Globe, ArrowRight, CheckCircle, Star, Calendar, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 const Home: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [latestUpdates, setLatestUpdates] = useState<any[]>([]);
 
+  // Hero Slides Data
   const heroSlides = [
     {
       image: '/uploads/images/admin_photo.png',
@@ -38,6 +43,7 @@ const Home: React.FC = () => {
     }
   ];
 
+  // Features, Stats, Council Members, Testimonials Data
   const features = [
     {
       icon: Award,
@@ -65,6 +71,7 @@ const Home: React.FC = () => {
     }
   ];
 
+  // Statistics Data
   const stats = [
     { number: '25,000+', label: 'Active Members' },
     { number: '150+', label: 'Partner Organizations' },
@@ -72,6 +79,7 @@ const Home: React.FC = () => {
     { number: '98%', label: 'Member Satisfaction' }
   ];
 
+  // Council Members Data
   const councilMembers = [
     {
       name: "Dr. Oyeleye Adebayo, FIITD, MICMN",
@@ -100,6 +108,7 @@ const Home: React.FC = () => {
     }
   ];
 
+  // Testimonials Data
   const testimonials = [
     {
       name: 'Etomi Rita Ademola',
@@ -121,20 +130,31 @@ const Home: React.FC = () => {
     }
   ];
 
+  // Auto-slide functionality for hero carousel with guard
   useEffect(() => {
+    if (!heroSlides || heroSlides.length === 0) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [heroSlides.length]);
+  }, [heroSlides?.length]);
 
   const nextSlide = () => {
+    if (!heroSlides || heroSlides.length === 0) return;
     setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
   };
 
   const prevSlide = () => {
+    if (!heroSlides || heroSlides.length === 0) return;
     setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   };
+
+  // Fetch latest updates from API
+  useEffect(() =>{
+    axios.get(`${API_URL}/events?limit=3`)
+    .then(res => setLatestUpdates(res.data.events))
+    .catch(() => setLatestUpdates([]));
+  }, []);
 
   return (
     <div>
@@ -341,86 +361,38 @@ const Home: React.FC = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-              <img
-                src="https://images.pexels.com/photos/1181533/pexels-photo-1181533.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&fit=crop"
-                alt="Customer Service Excellence Workshop"
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6">
-                <div className="flex items-center text-sm text-gray-500 mb-3">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  March 15, 2024
+            {!Array.isArray(latestUpdates) || latestUpdates.length === 0 ? (
+              <div className="col-span-3 text-center text-gray-400">No updates yet.</div>
+            ) : (
+              latestUpdates.map((item) => (
+                <div key={item._id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-6">
+                    <div className="flex items-center text-sm text-gray-500 mb-3">
+                      {item.type === 'event' ? (
+                        <Calendar className="w-4 h-4 mr-2" />
+                      ) : (
+                        <FileText className="w-4 h-4 mr-2" />
+                      )}
+                      {item.date ? new Date(item.date).toLocaleDateString() : 'Resource'}
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
+                    <p className="text-gray-600 mb-4">{item.description}</p>
+                    <Link
+                      to={item.link}
+                      className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800"
+                    >
+                      Learn More
+                      <ArrowRight className="ml-1 w-4 h-4" />
+                    </Link>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Customer Service Excellence Workshop
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Join us for comprehensive workshops designed to enhance your customer service skills and advance your career.
-                </p>
-                <Link
-                  to="/events"
-                  className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800"
-                >
-                  Learn More
-                  <ArrowRight className="ml-1 w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-              <img
-                src="https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&fit=crop"
-                alt="Annual Trade Management Conference"
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6">
-                <div className="flex items-center text-sm text-gray-500 mb-3">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  April 22, 2024
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Annual Trade Management Conference
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Our flagship event bringing together trade management experts and professionals from across Nigeria.
-                </p>
-                <Link
-                  to="/events"
-                  className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800"
-                >
-                  Register Now
-                  <ArrowRight className="ml-1 w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-              <img
-                src="https://images.pexels.com/photos/3184298/pexels-photo-3184298.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&fit=crop"
-                alt="New Certification Program"
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6">
-                <div className="flex items-center text-sm text-gray-500 mb-3">
-                  <FileText className="w-4 h-4 mr-2" />
-                  Program Launch
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  New Digital Customer Service Certification
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Introducing our latest certification program focused on digital customer service and modern trade practices.
-                </p>
-                <Link
-                  to="/membership"
-                  className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800"
-                >
-                  Enroll Today
-                  <ArrowRight className="ml-1 w-4 h-4" />
-                </Link>
-              </div>
-            </div>
+              ))
+            )}
           </div>
         </div>
       </section>

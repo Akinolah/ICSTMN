@@ -11,12 +11,12 @@ interface AuthModalProps {
   onClose: () => void;
   selectedPlan?: string | null;
 }
-
+ 
 // Paystack public key for payment processing
-const PAYSTACK_PUBLIC_KEY = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY || '';
+const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || '';
 
 // API URL for backend requests
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_BASE || '';
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: initialPlan = null }) => {
   const [currentStep, setCurrentStep] = useState<'login' | 'register' | 'subscription' | 'payment'>('login');
@@ -226,22 +226,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
 
     setIsLoading(true);
     try {
-      // Send registration data to backend
-      const plan = subscriptionPlans.find(p => p.id === selectedPlan);
-      await axios.post(`${API_URL}/auth/register`, {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phone,
-        profession: formData.profession,
-        address: formData.address,
-        dateOfBirth: formData.dateOfBirth,
-        qualification: formData.qualification,
-        experience: formData.experience,
-        referenceOne: formData.referenceOne,
-        referenceTwo: formData.referenceTwo,
-        membershipType: plan?.title || 'Associate Member',
-      });
+      // Check if user already exists
+      await axios.post(`${API_URL}/auth/precheck`, {email: formData.email});
       setCurrentStep('payment');
     } catch (error: any) {
       alert(error.response?.data?.message || 'Registration failed. Please try again.');
