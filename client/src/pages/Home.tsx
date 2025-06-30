@@ -364,7 +364,10 @@ const Home: React.FC = () => {
             {!Array.isArray(latestUpdates) || latestUpdates.length === 0 ? (
               <div className="col-span-3 text-center text-gray-400">No updates yet.</div>
             ) : (
-              latestUpdates.map((item) => (
+              [...latestUpdates]
+                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .slice(0, 3)
+                .map((item) => (
                 <div key={item._id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                   <img
                     src={item.image}
