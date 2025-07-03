@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import axios from 'axios';
 import User from '../models/user.model';
 import bcrypt from 'bcryptjs';
@@ -14,21 +14,24 @@ async function verifyPaystack(reference: string): Promise<any> {
   return response.data;
 }
 
-// POST /api/payment/verify
-export const verifyPaymentAndRegister = async (req: Request, res: Response) => {
+// POST /api/payments/verify
+export const verifyPaymentAndRegister = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
   try {
-    const { reference, user } = req.body;
+    const { reference, user } = request.body as { reference: string; user: any };
 
     // 1. Verify payment with Paystack
     const paystackRes = await verifyPaystack(reference);
     if (paystackRes.data.status !== 'success') {
-      return res.status(400).json({ message: 'Payment not successful' });
+      return reply.status(400).send({ message: 'Payment not successful' });
     }
 
     // 2. Check if user already exists
     const existing = await User.findOne({ email: user.email });
     if (existing) {
-      return res.status(400).json({ message: 'User already exists. Please login.' });
+      return reply.status(400).send({ message: 'User already exists. Please login.' });
     }
 
     // 3. Hash password
@@ -43,8 +46,8 @@ export const verifyPaymentAndRegister = async (req: Request, res: Response) => {
     await newUser.save();
 
     // 5. Respond success
-    res.json({ success: true, userId: newUser._id });
+    reply.send({ success: true, userId: newUser._id });
   } catch (err: any) {
-    res.status(500).json({ message: 'Payment verification or registration failed', error: err.message });
+    reply.status(500).send({ message: 'Payment verification or registration failed', error: err.message });
   }
 };

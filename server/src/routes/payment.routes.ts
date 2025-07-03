@@ -1,8 +1,11 @@
-import express from 'express';
+import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import { verifyPaymentAndRegister } from '../controllers/payment.controller';
 
-const router = express.Router();
-
-router.post('/verify', verifyPaymentAndRegister);
-
-export default router;
+export default function (
+  fastify: FastifyInstance,
+  opts: FastifyPluginOptions,
+  done: () => void
+) {
+  fastify.post('/verify', verifyPaymentAndRegister);
+  done();
+}

@@ -1,53 +1,37 @@
-import { Request, Response } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model';
 
-//Registration Controller for payment after registration
-// export const register = async (req: Request, res: Response) => {
-//   try {
-//     const { email, password, ...rest } = req.body;
-//     const existing = await User.findOne({ email });
-//     if (existing) return res.status(400).json({ message: 'Email already exists' });
-
-//     const hashed = await bcrypt.hash(password, 10);
-//     const user = new User({ email, password: hashed, ...rest, isAdmin: false });
-//     await user.save();
-//     res.json({ success: true, userId: user._id });
-//   } catch (err) {
-//     res.status(500).json({ message: 'Registration failed', error: err });
-//   }
-// };
-
 // Precheck Registration Controller
-export const precheckRegistration = async (req: Request, res: Response) => {
+export const precheckRegistration = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    const { email } = req.body;
+    const { email } = request.body as { email: string };
     const existing = await User.findOne({ email });
     if (existing) {
-      return res.status(400).json({ message: 'User already exists. Please login.' });
+      return reply.status(400).send({ message: 'User already exists. Please login.' });
     }
-    res.json({ ok: true });
+    reply.send({ ok: true });
   } catch (err: any) {
-    res.status(500).json({ message: 'Precheck failed', error: err.message });
+    reply.status(500).send({ message: 'Precheck failed', error: err.message });
   }
 };
 
 // Login Controller
-export const login = async (req: Request, res: Response) => {
+export const login = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = request.body as { email: string; password: string };
 
     // 1. Find user by email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return reply.status(400).send({ message: 'Invalid credentials' });
     }
 
     // 2. Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return reply.status(400).send({ message: 'Invalid credentials' });
     }
 
     // 3. Create JWT token
@@ -58,7 +42,7 @@ export const login = async (req: Request, res: Response) => {
     );
 
     // 4. Return token and user info (omit password)
-    res.json({
+    reply.send({
       token,
       user: {
         id: user._id,
@@ -69,7 +53,7 @@ export const login = async (req: Request, res: Response) => {
         // add other fields as needed
       }
     });
-  } catch (err) {
-    res.status(500).json({ message: 'Login failed', error: err });
+  } catch (err: any) {
+    reply.status(500).send({ message: 'Login failed', error: err.message });
   }
 };

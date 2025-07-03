@@ -1,27 +1,26 @@
-import { Request, Response } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import User from '../models/user.model';
 
 // Get all users
-export const getUsers = async (_req: Request, res: Response) => {
+export const getUsers = async (_request: FastifyRequest, reply: FastifyReply) => {
   try {
     const users = await User.find();
-    res.json({ users });
+    reply.send({ users });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch users' });
+    reply.status(500).send({ message: 'Failed to fetch users' });
   }
 };
 
 // Delete a user
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const { id } = request.params as { id: string };
+    const user = await User.findByIdAndDelete(id);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return reply.status(404).send({ message: 'User not found' });
     }
-
-    res.status(200).json({ message: 'User deleted successfully' });
-
+    reply.status(200).send({ message: 'User deleted successfully' });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to delete user' });
+    reply.status(500).send({ message: 'Failed to delete user' });
   }
 };

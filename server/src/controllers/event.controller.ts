@@ -1,45 +1,44 @@
-import { Request, Response } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import Event from '../models/event.model';
 
-
 // Get latest events for homepage
-export const getLatestEvents = async (req: Request, res: Response) => {
+export const getLatestEvents = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    const limit = parseInt(req.query.limit as string) || 3;
+    const limit = parseInt((request.query as any).limit) || 3;
     const events = await Event.find().sort({ date: -1 }).limit(limit);
-    res.json({ events });
+    reply.send({ events });
   } catch (err: any) {
-    res.status(500).json({ message: 'Failed to fetch events', error: err.message });
+    reply.status(500).send({ message: 'Failed to fetch events', error: err.message });
   }
 };
 
 // Get all events
-export const getEvents = async (_req: Request, res: Response) => {
+export const getEvents = async (_request: FastifyRequest, reply: FastifyReply) => {
   try {
     const events = await Event.find();
-    res.json({ events });
+    reply.send({ events });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch events' });
+    reply.status(500).send({ message: 'Failed to fetch events' });
   }
 };
 
 // Create a new event
-export const createEvent = async (req: Request, res: Response) => {
+export const createEvent = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    const event = new Event(req.body);
+    const event = new Event(request.body);
     await event.save();
-    res.json({ event });
+    reply.send({ event });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to create event' });
+    reply.status(500).send({ message: 'Failed to create event' });
   }
 };
 
 // Delete an event
-export const deleteEvent = async (req: Request, res: Response) => {
+export const deleteEvent = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    await Event.findByIdAndDelete(req.params.id);
-    res.json({ success: true });
+    await Event.findByIdAndDelete((request.params as any).id);
+    reply.send({ success: true });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to delete event' });
+    reply.status(500).send({ message: 'Failed to delete event' });
   }
 };

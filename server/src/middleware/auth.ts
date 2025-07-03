@@ -1,25 +1,31 @@
 import jwt from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const auth = req.headers.authorization;
-  if (!auth) return res.status(401).json({ message: 'No token' });
+// Auth middleware for Fastify
+export async function authMiddleware(request: FastifyRequest, reply: FastifyReply) {
+  const auth = request.headers.authorization;
+  if (!auth) {
+    reply.status(401).send({ message: 'No token' });
+    return;
+  }
   const token = auth.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any;
-    (req as any).user = decoded;
-    next();
+    (request as any).user = decoded;
   } catch {
-    res.status(401).json({ message: 'Invalid token' });
+    reply.status(401).send({ message: 'Invalid token' });
+    return;
   }
-};
+}
 
-export const superAdminOnly = (req: Request, res: Response, next: NextFunction) => {
-  // Only allow adminIndex 0 (Admin 1)
-  const user = (req as any).user;
+// Super admin only middleware for Fastify
+export async function superAdminOnly(request: FastifyRequest, reply: FastifyReply) {
+  const user = (request as any).user;
   if (user && user.isAdmin && user.adminIndex === 0) {
-    next();
+    // allowed
+    return;
   } else {
-    res.status(403).json({ message: 'Forbidden' });
+    reply.status(403).send({ message: 'Forbidden' });
+    return;
   }
-};
+}

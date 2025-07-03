@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { FastifyInstance } from 'fastify';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -20,3 +21,9 @@ export const connectDB = async () => {
     process.exit(1); // Exit the app if connection fails
   }
 };
+
+// Fastify plugin to connect to MongoDB
+export async function dbPlugin(fastify: FastifyInstance) {
+  await connectDB();
+  fastify.decorate('mongoose', mongoose);
+}

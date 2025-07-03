@@ -1,8 +1,11 @@
-import { Router } from 'express';
+import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import { getLatestEvents } from '../controllers/event.controller';
 
-const router = Router();
-
-router.get('/', getLatestEvents);
-
-export default router;
+export default function (
+  fastify: FastifyInstance,
+  opts: FastifyPluginOptions,
+  done: () => void
+) {
+  fastify.get('/', getLatestEvents);
+  done();
+}

@@ -1,10 +1,12 @@
-import { Router } from 'express';
+import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import { login, precheckRegistration } from '../controllers/auth.controller';
 
-const router = Router();
-
-// router.post('/register', register);
-router.post('/precheck', precheckRegistration);
-router.post('/login', login);
-
-export default router; 
+export default function (
+  fastify: FastifyInstance,
+  opts: FastifyPluginOptions,
+  done: () => void
+) {
+  fastify.post('/precheck', precheckRegistration);
+  fastify.post('/login', login);
+  done();
+}

@@ -1,40 +1,51 @@
-import express from 'express';
+import Fastify from 'fastify';
+import fastifyCors from '@fastify/cors';
+import fastifyStatic from '@fastify/static';
 import path from 'path';
-import cors from 'cors';
 import dotenv from 'dotenv';
-import morgan from 'morgan';
 import { connectDB } from './utils/db';
+import { seedAdmins } from './utils/adminSeed';
 import authRoutes from './routes/auth.routes';
 import paymentRoutes from './routes/payment.routes';
-import { seedAdmins } from './utils/adminSeed';
 import adminRoutes from './routes/admin.routes';
 import eventRoutes from './routes/events.routes';
 
 dotenv.config();
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(morgan('dev'));
+const fastify = Fastify({ logger: true });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/events', eventRoutes);
+// Register CORS
+fastify.register(fastifyCors);
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../../client/dist')));
+// Register API routes
+fastify.register(authRoutes, { prefix: '/api/auth' });
+fastify.register(paymentRoutes, { prefix: '/api/payments' });
+fastify.register(adminRoutes, { prefix: '/api/admin' });
+fastify.register(eventRoutes, { prefix: '/api/events' });
 
-// The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/dist', 'index.html'));
+// Serve static files
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, '../../client/dist'),
+  prefix: '/',
 });
 
-const PORT = process.env.PORT || 5000;
-
-connectDB().then(async () => {
-  await seedAdmins();
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
+// Wildcard route for SPA (serves index.html for all unmatched routes)
+fastify.setNotFoundHandler((req, reply) => {
+  reply.sendFile('index.html');
 });
+
+const PORT = Number(process.env.PORT) || 5000;
+
+const start = async () => {
+  try {
+    await connectDB();
+    await seedAdmins();
+    await fastify.listen({ port: PORT, host: '0.0.0.0' });
+    fastify.log.info(`Server running at http://localhost:${PORT}`);
+  } catch (err) {
+    fastify.log.error(err);
+    process.exit(1);
+  }
+};
+
+start();

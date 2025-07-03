@@ -1,33 +1,34 @@
-import { Request, Response } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import Resource from '../models/resource.model';
 
 // Get all resources
-export const getResources = async (_req: Request, res: Response) => {
+export const getResources = async (_request: FastifyRequest, reply: FastifyReply) => {
   try {
     const resources = await Resource.find();
-    res.json({ resources });
+    reply.send({ resources });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch resources' });
+    reply.status(500).send({ message: 'Failed to fetch resources' });
   }
 };
 
 // Create a new resource
-export const createResource = async (req: Request, res: Response) => {
+export const createResource = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    const resource = new Resource(req.body);
+    const resource = new Resource(request.body);
     await resource.save();
-    res.json({ resource });
+    reply.send({ resource });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to create resource' });
+    reply.status(500).send({ message: 'Failed to create resource' });
   }
 };
 
 // Delete a resource
-export const deleteResource = async (req: Request, res: Response) => {
+export const deleteResource = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    await Resource.findByIdAndDelete(req.params.id);
-    res.json({ success: true });
+    const { id } = request.params as { id: string };
+    await Resource.findByIdAndDelete(id);
+    reply.send({ success: true });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to delete resource' });
+    reply.status(500).send({ message: 'Failed to delete resource' });
   }
 };
