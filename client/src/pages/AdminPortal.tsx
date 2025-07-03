@@ -60,7 +60,7 @@ const AdminPortal: React.FC = () => {
     price: '',
     nonMemberPrice: '',
     category: 'workshop',
-    image: '',
+    image: null as string | null,
     agenda: ['']
   });
 
@@ -115,36 +115,28 @@ const AdminPortal: React.FC = () => {
 
   const handleEventSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const eventData = {
-      ...eventForm,
-      maxAttendees: parseInt(eventForm.maxAttendees),
-      status: 'published' as const,
-      image: eventForm.image || 'https://images.pexels.com/photos/1181533/pexels-photo-1181533.jpeg?auto=compress&cs=tinysrgb&w=600&h=300&fit=crop',
-      createdBy: user.email
-    };
 
-    if (editingEvent) {
-      updateEvent(editingEvent.id, eventData);
-      setEditingEvent(null);
-    } else {
-      addEvent(eventData);
+    const formData = new FormData();
+    formData.append('title', eventForm.title);
+    formData.append('description', eventForm.description);
+    formData.append('date', eventForm.date);
+    formData.append('time', eventForm.time);
+    formData.append('location', eventForm.location);
+    formData.append('maxAttendees', eventForm.maxAttendees);
+    formData.append('price', eventForm.price);
+    formData.append('nonMemberPrice', eventForm.nonMemberPrice);
+    formData.append('category', eventForm.category);
+    formData.append('agenda', JSON.stringify(eventForm.agenda));
+    if (eventForm.image) {
+      formData.append('image', eventForm.image);
     }
 
-    setEventForm({
-      title: '',
-      description: '',
-      date: '',
-      time: '',
-      location: '',
-      maxAttendees: '',
-      price: '',
-      nonMemberPrice: '',
-      category: 'workshop',
-      image: '',
-      agenda: ['']
-    });
+    // Send formData to your backend using fetch or axios
+    // Example:
+    // await fetch('/api/events', { method: 'POST', body: formData });
+
     setShowEventModal(false);
+    // Reset form as needed
   };
 
   const handleResourceSubmit = (e: React.FormEvent) => {
@@ -762,12 +754,29 @@ const AdminPortal: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Image URL (Optional)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Event Image (JPEG, JPG, PNG, JIFF, max 5MB)
+                </label>
                 <input
-                  type="url"
-                  value={eventForm.image}
-                  onChange={(e) => setEventForm({...eventForm, image: e.target.value})}
+                  type="file"
+                  accept=".jpeg,.jpg,.png,.jiff,image/jpeg,image/jpg,image/png,image/jiff"
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/jiff'];
+                      if (!allowedTypes.includes(file.type)) {
+                        alert('Only JPEG, JPG, PNG, or JIFF files are allowed.');
+                        return;
+                      }
+                      if (file.size > 5 * 1024 * 1024) {
+                        alert('File size must be less than 5MB.');
+                        return;
+                      }
+                      setEventForm({ ...eventForm, image: file });
+                    }
+                  }}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
                 />
               </div>
 

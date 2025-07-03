@@ -17,7 +17,10 @@ dotenv.config();
 const fastify = Fastify({ logger: true });
 
 // Register CORS
-fastify.register(fastifyCors);
+fastify.register(fastifyCors, {
+  origin: ['https://icstmn.onrender.com'],
+  credentials: true
+});
 
 // Register API routes
 fastify.register(authRoutes, { prefix: '/api/auth' });

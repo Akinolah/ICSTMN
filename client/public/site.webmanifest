@@ -1,0 +1,21 @@
+{
+  "name": "Institute of Customer Service & Trade Management of Nigeria",
+  "short_name": "ICSTMN",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0a2540",
+  "description": "Advancing professional excellence in customer service and trade management in Nigeria.",
+  "icons": [
+    {
+      "src": "/uploads/favicon_io/favicon.ico",
+      "sizes": "48x48 32x32 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/uploads/favicon_io/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
