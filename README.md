@@ -20,14 +20,18 @@ This project is a modern, scalable, and visually engaging platform for professio
 ### Backend
 
 - **[Node.js](https://nodejs.org/):** JavaScript runtime for scalable server-side applications.
-- **[Express](https://expressjs.com/):** Fast, unopinionated web framework for Node.js.
+- **[Fastify](https://fastify.dev/):** High-performance, low-overhead web framework for Node.js.  
+  _Originally built with [Express](https://expressjs.com/), but migrated to Fastify for better performance and to resolve persistent routing and middleware errors._
 - **[TypeScript](https://www.typescriptlang.org/):** Type safety for backend code.
 - **[MongoDB](https://www.mongodb.com/):** NoSQL database for flexible data storage.
 - **[Mongoose](https://mongoosejs.com/):** Elegant MongoDB object modeling.
 - **[JWT](https://jwt.io/):** Secure authentication.
 - **[dotenv](https://github.com/motdotla/dotenv):** Environment variable management.
-- **[CORS](https://github.com/expressjs/cors):** Cross-origin resource sharing.
-- **[Morgan](https://github.com/expressjs/morgan):** HTTP request logger middleware.
+- **[@fastify/cors](https://github.com/fastify/fastify-cors):** Cross-origin resource sharing.
+- **[@fastify/static](https://github.com/fastify/fastify-static):** Static file serving.
+- **[@fastify/multipart](https://github.com/fastify/fastify-multipart):** File upload support.
+
+> _**Note:** The backend was originally implemented with Express, but due to recurring routing and middleware issues, it was migrated to Fastify for improved stability, speed, and developer experience._
 
 ---
 

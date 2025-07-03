@@ -1,3 +1,5 @@
+console.log('Starting Fastify server...');
+
 import Fastify from 'fastify';
 import fastifyCors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
