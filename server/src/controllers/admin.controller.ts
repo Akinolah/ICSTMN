@@ -17,4 +17,4 @@ export const getAdminReports = async (_request: FastifyRequest, reply: FastifyRe
   } catch (err) {
     reply.status(500).send({ message: 'Failed to fetch admin reports' });
   }
-};
+}; 

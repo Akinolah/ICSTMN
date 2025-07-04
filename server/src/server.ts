@@ -18,7 +18,7 @@ const fastify = Fastify({ logger: true });
 
 // Register CORS
 fastify.register(fastifyCors, {
-  origin: ['https://icstmn.onrender.com'],
+  origin: ['https://icstmn.onrender.com', 'http://localhost:5173'],
   credentials: true
 });
 
