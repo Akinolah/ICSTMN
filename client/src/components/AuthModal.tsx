@@ -17,6 +17,7 @@ const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || '';
 
 // API URL for backend requests
 const API_URL = import.meta.env.VITE_API_URL || '';
+const API_URL_LOCAL = import.meta.env.VITE_API_URL_LOCAL || '';
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: initialPlan = null }) => {
   const [currentStep, setCurrentStep] = useState<'login' | 'register' | 'subscription' | 'payment'>('login');
@@ -49,12 +50,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
   const { login } = useAuth();
   const { addMember } = useApp();
   const navigate = useNavigate();
-
-  // Demo user credential
-  const demoUser = {
-    email: 'member@icstmn.org.ng',
-    password: 'member123'
-  };
 
   const subscriptionPlans = [
     {
@@ -159,32 +154,29 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: in
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-  
+
     try {
-      // Demo login (for testing)
-      if (formData.email === demoUser.email && formData.password === demoUser.password) {
-        await login(formData.email, formData.password, 'dashboard');
+      // Call login from context (handles actual login + sets user/token)
+      await login(formData.email, formData.password, 'user');
+
+      // Get user from localStorage (to avoid race condition with React state updates)
+      const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+      // Optionally: verify role or status if needed before redirecting
+      if (loggedInUser?.role?.toLowerCase() === 'user' || loggedInUser?.role === 'member') {
         onClose();
-        navigate('/dashboard');
-        return;
+        navigate('/user');
+      } else {
+        alert('Access denied. You are not authorized as a user.');
       }
-  
-      // Real backend login
-      const res = await axios.post(`${API_URL}/auth/login`, {
-        email: formData.email,
-        password: formData.password,
-      });
-  
-      // You may want to use res.data.token and res.data.user here
-      await login(formData.email, formData.password, 'dashboard');
-      onClose();
-      navigate('/dashboard');
+
     } catch (error: any) {
-      alert(error.response?.data?.message || 'Login failed. Please try again.');
+      alert(error.response?.data?.message || error.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const handleSubscriptionSelect = (planId: string) => {
     setSelectedPlan(planId);

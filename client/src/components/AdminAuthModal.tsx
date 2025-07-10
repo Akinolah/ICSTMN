@@ -11,44 +11,35 @@ interface AdminAuthModalProps {
 const AdminAuthModal: React.FC<AdminAuthModalProps> = ({ isOpen, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState<string | null>(null);
 
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
-
-  // Demo admin credentials
-  const demoCredentials = [
-    { email: 'admin@icstmn.org.ng', password: 'admin123', role: 'Super Admin' },
-    { email: 'director@icstmn.org.ng', password: 'director123', role: 'Director' },
-    { email: 'manager@icstmn.org.ng', password: 'manager123', role: 'Manager' },
-    { email: 'coordinator@icstmn.org.ng', password: 'coord123', role: 'Event Coordinator' },
-    { email: 'content@icstmn.org.ng', password: 'content123', role: 'Content Manager' }
-  ];
 
   if (!isOpen) return null;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
     try {
-      // Check if credentials match any demo admin account
-      const adminAccount = demoCredentials.find(
-        cred => cred.email === formData.email && cred.password === formData.password
-      );
+      await login(formData.email, formData.password, 'admin');
 
-      if (adminAccount) {
-        await login(formData.email, formData.password, 'admin');
-        onClose();
-        navigate('/admin');
+      // Get the user from localStorage instead of relying on stale context
+      const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+      onClose();
+
+      if (loggedInUser.role === 'Super Admin') {
+        navigate('/admin1'); // Redirect to Super Admin portal
       } else {
-        alert('Invalid admin credentials. Please use one of the demo accounts.');
+        navigate('/admin2'); // Redirect to Admin portal
       }
-    } catch (error) {
-      console.error('Admin login error:', error);
+    } catch (err: any) {
+      console.error('Login failed:', err);
+      setError(err.message || 'Invalid login credentials');
     } finally {
       setIsLoading(false);
     }
@@ -56,17 +47,7 @@ const AdminAuthModal: React.FC<AdminAuthModalProps> = ({ isOpen, onClose }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  const handleDemoLogin = (credentials: { email: string; password: string }) => {
-    setFormData({
-      email: credentials.email,
-      password: credentials.password
-    });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -139,6 +120,10 @@ const AdminAuthModal: React.FC<AdminAuthModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
 
+            {error && (
+              <p className="text-sm text-red-600 font-medium">{error}</p>
+            )}
+
             <button
               type="submit"
               disabled={isLoading}
@@ -147,23 +132,6 @@ const AdminAuthModal: React.FC<AdminAuthModalProps> = ({ isOpen, onClose }) => {
               {isLoading ? 'Signing In...' : 'Access Admin Portal'}
             </button>
           </form>
-
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <p className="text-xs text-gray-600 font-medium mb-3">Demo Admin Accounts:</p>
-            <div className="space-y-2 max-h-32 overflow-y-auto">
-              {demoCredentials.map((cred, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleDemoLogin(cred)}
-                  className="w-full text-left p-2 bg-white rounded border hover:bg-gray-50 transition-colors"
-                >
-                  <div className="text-xs text-gray-700 font-medium">{cred.role}</div>
-                  <div className="text-xs text-gray-500">{cred.email}</div>
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>

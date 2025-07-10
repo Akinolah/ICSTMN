@@ -3,7 +3,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model';
 
-// Precheck Registration Controller
+
+// USER REGISTRATION PRECHECK CONTROLLER
 export const precheckRegistration = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { email } = request.body as { email: string };
@@ -17,40 +18,41 @@ export const precheckRegistration = async (request: FastifyRequest, reply: Fasti
   }
 };
 
-// Login Controller
-export const login = async (request: FastifyRequest, reply: FastifyReply) => {
+// USER LOGIN CONTROLLER
+export const loginUser = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { email, password } = request.body as { email: string; password: string };
 
-    // 1. Find user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, isAdmin: false }); // Ensure not admin
     if (!user) {
       return reply.status(400).send({ message: 'Invalid credentials' });
     }
 
-    // 2. Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return reply.status(400).send({ message: 'Invalid credentials' });
     }
 
-    // 3. Create JWT token
     const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin },
+      { id: user._id, role: user.role },
       process.env.JWT_SECRET as string,
       { expiresIn: '1d' }
     );
 
-    // 4. Return token and user info (omit password)
-    reply.send({
+    reply.status(200).send({
       token,
       user: {
         id: user._id,
-        email: user.email,
         name: user.name,
-        isAdmin: user.isAdmin,
+        email: user.email,
+        role: user.role,
         membershipType: user.membershipType,
-        // add other fields as needed
+        joinDate: user.joinDate,
+        phone: user.phone,
+        status: user.status,
+        profession: user.profession,
+        organization: user.organization,
+        address: user.address
       }
     });
   } catch (err: any) {

@@ -13,6 +13,14 @@ export interface IUser extends Document {
   referenceOne: string;
   referenceTwo: string;
   membershipType: string;
+  organization?: string;
+
+  // For both admins and users
+  role: 'User' | 'Admin' | 'Super Admin';
+  joinDate: string;
+  status: 'active' | 'pending' | 'suspended';
+
+  // Admin-specific fields
   isAdmin: boolean;
   adminIndex?: number;
   eventsManaged?: number;
@@ -33,6 +41,14 @@ const UserSchema: Schema = new Schema({
   referenceOne: String,
   referenceTwo: String,
   membershipType: String,
+  organization: { type: String, default: '' },
+
+  // Add these fields
+  role: { type: String, enum: ['User', 'Admin', 'Super Admin'], default: 'User' },
+  joinDate: { type: String, default: () => new Date().toISOString() },
+  status: { type: String, enum: ['active', 'pending', 'suspended'], default: 'pending' },
+
+  // Admin-related
   isAdmin: { type: Boolean, default: false },
   adminIndex: { type: Number, default: null },
   eventsManaged: { type: Number, default: 0 },
