@@ -16,7 +16,7 @@ interface AuthModalProps {
 const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || '';
 
 // API URL for backend requests
-const API_URL = import.meta.env.VITE_API_BASE || '';
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, selectedPlan: initialPlan = null }) => {
   const [currentStep, setCurrentStep] = useState<'login' | 'register' | 'subscription' | 'payment'>('login');

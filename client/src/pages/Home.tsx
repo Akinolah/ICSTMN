@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Award, Users, BookOpen, TrendingUp, Shield, Globe, ArrowRight, CheckCircle, Star, Calendar, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_BASE || '';
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 const Home: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);

@@ -3,6 +3,7 @@ console.log('Starting Fastify server...');
 import Fastify from 'fastify';
 import fastifyCors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
+// import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
 import { connectDB } from './utils/db';
