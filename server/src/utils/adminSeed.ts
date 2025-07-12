@@ -1,14 +1,15 @@
 import { FastifyInstance } from 'fastify';
 import User from '../models/user.model';
 import bcrypt from 'bcryptjs';
+import { stat } from 'fs';
 
 // Admin seed data
 const admins = [
-  { email: 'admin@icstmn.org.ng', password: 'Admin@1234', name: 'Admin One', adminIndex: 0 },
-  { email: 'admin2@icstmn.org.ng', password: 'Admin@1234', name: 'Admin Two', adminIndex: 1 },
-  { email: 'admin3@icstmn.org.ng', password: 'Admin@1234', name: 'Admin Three', adminIndex: 2 },
-  { email: 'admin4@icstmn.org.ng', password: 'Admin@1234', name: 'Admin Four', adminIndex: 3 },
-  { email: 'admin5@icstmn.org.ng', password: 'Admin@1234', name: 'Admin Five', adminIndex: 4 },
+  { email: 'admin@icstmn.org.ng', password: 'Admin@1234', name: 'Super Admin', adminIndex: 0, role: 'Super Admin', status: 'active' },
+  { email: 'admin2@icstmn.org.ng', password: 'Admin@1234', name: 'Super Admin', adminIndex: 1, role: 'Super Admin', status: 'active' },
+  { email: 'admin3@icstmn.org.ng', password: 'Admin@1234', name: 'Admin ', adminIndex: 2, role: 'Admin', status: 'active' },
+  { email: 'admin4@icstmn.org.ng', password: 'Admin@1234', name: 'Admin ', adminIndex: 3, role: 'Admin', status: 'active' },
+  { email: 'admin5@icstmn.org.ng', password: 'Admin@1234', name: 'Admin ', adminIndex: 4, role: 'Admin', status: 'active' },
 ];
 
 // User seed data
@@ -25,6 +26,7 @@ const user = {
   referenceOne: 'Ref A',
   referenceTwo: 'Ref B',
   membershipType: 'Premium',
+  status: 'active',
   isAdmin: false,
 };
 

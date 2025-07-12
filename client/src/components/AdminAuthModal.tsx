@@ -25,7 +25,7 @@ const AdminAuthModal: React.FC<AdminAuthModalProps> = ({ isOpen, onClose }) => {
     setError(null);
 
     try {
-      await login(formData.email, formData.password, 'admin');
+      await login(formData.email, formData.password, 'Admin');
 
       // Get the user from localStorage instead of relying on stale context
       const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -33,9 +33,9 @@ const AdminAuthModal: React.FC<AdminAuthModalProps> = ({ isOpen, onClose }) => {
       onClose();
 
       if (loggedInUser.role === 'Super Admin') {
-        navigate('/admin1'); // Redirect to Super Admin portal
+        navigate('/admin'); // Redirect to Super Admin portal
       } else {
-        navigate('/admin2'); // Redirect to Admin portal
+        navigate('/admin1'); // Redirect to Admin portal
       }
     } catch (err: any) {
       console.error('Login failed:', err);

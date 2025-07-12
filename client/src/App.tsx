@@ -27,8 +27,8 @@ function App() {
               <Route path="/resources" element={<Resources />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/user" element={<Dashboard />} />
-              <Route path="/admin1" element={<SuperAdmin />} />
-              <Route path="/admin2" element={<Admin />} />
+              <Route path="/admin" element={<SuperAdmin />} />
+              <Route path="/admin1" element={<Admin />} />
               {/* Add more routes as needed */}
             </Routes>
           </Layout>

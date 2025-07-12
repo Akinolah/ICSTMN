@@ -1,6 +1,10 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Types } from 'mongoose';
+
+export type Role = 'User' | 'Admin' | 'Super Admin';
+export type Status = 'active' | 'pending' | 'suspended';
 
 export interface IUser extends Document {
+  _id: Types.ObjectId;
   name: string;
   email: string;
   password: string;
@@ -14,46 +18,49 @@ export interface IUser extends Document {
   referenceTwo: string;
   membershipType: string;
   organization?: string;
-
-  // For both admins and users
-  role: 'User' | 'Admin' | 'Super Admin';
-  joinDate: string;
-  status: 'active' | 'pending' | 'suspended';
-
-  // Admin-specific fields
-  isAdmin: boolean;
+  role: Role;
+  joinDate: Date;
+  status: Status;
   adminIndex?: number;
   eventsManaged?: number;
   contentsUploaded?: number;
-  lastActive?: string;
+  lastActive?: Date;
 }
 
-const UserSchema: Schema = new Schema({
+const UserSchema: Schema = new Schema<IUser>({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true, index: true },
   password: { type: String, required: true },
-  phone: String,
-  profession: String,
-  address: String,
-  dateOfBirth: String,
-  qualification: String,
-  experience: String,
-  referenceOne: String,
-  referenceTwo: String,
-  membershipType: String,
+
+  phone: { type: String, default: '' },
+  profession: { type: String, default: '' },
+  address: { type: String, default: '' },
+  dateOfBirth: { type: String, default: '' },
+  qualification: { type: String, default: '' },
+  experience: { type: String, default: '' },
+  referenceOne: { type: String, default: '' },
+  referenceTwo: { type: String, default: '' },
+  membershipType: { type: String, default: '' },
   organization: { type: String, default: '' },
 
-  // Add these fields
-  role: { type: String, enum: ['User', 'Admin', 'Super Admin'], default: 'User' },
-  joinDate: { type: String, default: () => new Date().toISOString() },
-  status: { type: String, enum: ['active', 'pending', 'suspended'], default: 'pending' },
+  role: {
+    type: String,
+    enum: ['User', 'Admin', 'Super Admin'],
+    default: 'User',
+    index: true
+  },
 
-  // Admin-related
-  isAdmin: { type: Boolean, default: false },
+  joinDate: { type: Date, default: Date.now },
+  status: {
+    type: String,
+    enum: ['active', 'pending', 'suspended'],
+    default: 'active',
+  },
+
   adminIndex: { type: Number, default: null },
   eventsManaged: { type: Number, default: 0 },
   contentsUploaded: { type: Number, default: 0 },
-  lastActive: { type: String, default: '' },
+  lastActive: { type: Date, default: Date.now }
 });
 
 export default mongoose.model<IUser>('User', UserSchema);
