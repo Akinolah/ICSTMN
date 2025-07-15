@@ -20,30 +20,42 @@ const AdminAuthModal: React.FC<AdminAuthModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+  e.preventDefault();
+  setIsLoading(true);
+  setError(null);
 
-    try {
-      await login(formData.email, formData.password, 'Admin');
+  try {
+    // Call login with normalized role in lowercase
+    await login(formData.email, formData.password, 'admin');
 
-      // Get the user from localStorage instead of relying on stale context
-      const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
+    // Get the user from localStorage after login
+    const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
 
-      onClose();
-
-      if (loggedInUser.role === 'Super Admin') {
-        navigate('/admin'); // Redirect to Super Admin portal
-      } else {
-        navigate('/admin1'); // Redirect to Admin portal
-      }
-    } catch (err: any) {
-      console.error('Login failed:', err);
-      setError(err.message || 'Invalid login credentials');
-    } finally {
-      setIsLoading(false);
+    if (!loggedInUser || !loggedInUser.role) {
+      throw new Error('Login successful, but user role not found');
     }
-  };
+
+    if (loggedInUser.status === 'pending' || loggedInUser.status === 'suspended') {
+      throw new Error('Your account is not active. Please contact support.');
+    }
+
+    onClose();
+
+    if (loggedInUser.role === 'super admin') {
+      navigate('/admin'); // Super Admin dashboard
+    } else if (loggedInUser.role === 'admin') {
+      navigate('/admin1'); // Regular Admin dashboard
+    } else {
+      throw new Error('Unauthorized role');
+    }
+
+  } catch (err: any) {
+    console.error('Login failed:', err);
+    setError(err.message || 'Invalid login credentials');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

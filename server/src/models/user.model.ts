@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
 
-export type Role = 'User' | 'Admin' | 'Super Admin';
+export type Role = 'user' | 'admin' | 'super admin';
 export type Status = 'active' | 'pending' | 'suspended';
 
 export interface IUser extends Document {
@@ -45,8 +45,8 @@ const UserSchema: Schema = new Schema<IUser>({
 
   role: {
     type: String,
-    enum: ['User', 'Admin', 'Super Admin'],
-    default: 'User',
+    enum: ['user', 'admin', 'super admin'],
+    default: 'user',
     index: true
   },
 
@@ -63,4 +63,4 @@ const UserSchema: Schema = new Schema<IUser>({
   lastActive: { type: Date, default: Date.now }
 });
 
-export default mongoose.model<IUser>('User', UserSchema);
+export default mongoose.model<IUser>('user', UserSchema);

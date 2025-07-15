@@ -5,11 +5,11 @@ import { stat } from 'fs';
 
 // Admin seed data
 const admins = [
-  { email: 'admin@icstmn.org.ng', password: 'Admin@1234', name: 'Super Admin', adminIndex: 0, role: 'Super Admin', status: 'active' },
-  { email: 'admin2@icstmn.org.ng', password: 'Admin@1234', name: 'Super Admin', adminIndex: 1, role: 'Super Admin', status: 'active' },
-  { email: 'admin3@icstmn.org.ng', password: 'Admin@1234', name: 'Admin ', adminIndex: 2, role: 'Admin', status: 'active' },
-  { email: 'admin4@icstmn.org.ng', password: 'Admin@1234', name: 'Admin ', adminIndex: 3, role: 'Admin', status: 'active' },
-  { email: 'admin5@icstmn.org.ng', password: 'Admin@1234', name: 'Admin ', adminIndex: 4, role: 'Admin', status: 'active' },
+  { email: 'admin@icstmn.org.ng', password: 'Admin@1234', name: 'Super Admin', adminIndex: 0, role: 'super admin', status: 'active' },
+  { email: 'admin2@icstmn.org.ng', password: 'Admin@1234', name: 'Super Admin', adminIndex: 1, role: 'super admin', status: 'active' },
+  { email: 'admin3@icstmn.org.ng', password: 'Admin@1234', name: 'Admin', adminIndex: 2, role: 'admin', status: 'active' },
+  { email: 'admin4@icstmn.org.ng', password: 'Admin@1234', name: 'Admin', adminIndex: 3, role: 'admin', status: 'active' },
+  { email: 'admin5@icstmn.org.ng', password: 'Admin@1234', name: 'Admin', adminIndex: 4, role: 'admin', status: 'active' },
 ];
 
 // User seed data

@@ -9,7 +9,7 @@ export const loginUser = async (request: FastifyRequest, reply: FastifyReply) =>
 
     const user = await User.findOne({ email });
 
-    if (!user || user.role !== 'User') {
+    if (!user || user.role !== 'user') {
       return reply.status(400).send({ message: 'Invalid credentials' });
     }
 

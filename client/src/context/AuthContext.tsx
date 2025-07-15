@@ -5,7 +5,7 @@ interface User {
   name: string;
   email: string;
   membershipType?: string;
-  role: 'User' | 'Admin' | 'Super Admin';
+  role: 'user' | 'admin' | 'super admin';
   joinDate?: string;
   status?: string;
   phone?: string;
@@ -16,7 +16,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string, type: 'User' | 'Admin' | 'Super Admin') => Promise<void>;
+  login: (email: string, password: string, type: 'user' | 'admin' | 'super admin') => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
   updateUser: (userData: Partial<User>) => void;
@@ -45,9 +45,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
 
-  const login = async (email: string, password: string, type: 'User' | 'Admin' | 'Super Admin') => {
+  const login = async (email: string, password: string, type: 'user' | 'admin' | 'super admin') => {
     const endpoint =
-      type === 'Admin'
+      type === 'admin'
         ? '/api/admin/login'
         : '/api/auth/login';
 

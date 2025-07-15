@@ -5,24 +5,48 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Institute of Customer Service & Trade Management of Nigeria</title>
+
+  <!-- SEO Meta Tags -->
   <meta name="description" content="ICSTMN - Advancing professional excellence in customer service and trade management in Nigeria. Join our institute for networking, certification, and career growth." />
   <meta name="keywords" content="ICSTMN, Customer Service, Trade Management, Nigeria, Professional Institute, Certification, Networking" />
   <meta name="author" content="Institute of Customer Service & Trade Management of Nigeria" />
+
+  <!-- Open Graph Meta Tags -->
   <meta property="og:title" content="Institute of Customer Service & Trade Management of Nigeria" />
   <meta property="og:description" content="Join Nigeria's premier institute for customer service and trade management professionals." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://icstmn.org.ng/" />
-  <meta property="og:image" content="https://your-domain.com/og-image.jpg" />
-  <link rel="icon" href="../uploads/favicon_io/favicon.ico" />
-  <link rel="apple-touch-icon" href="../uploads/favicon_io/apple-touch-icon.png" />
+  <meta property="og:image" content="https://icstmn.org.ng/uploads/og-image.jpg" />
+
+  <!-- Favicon & Manifest -->
+  <link rel="icon" href="/uploads/favicon_io/favicon.ico" />
+  <link rel="apple-touch-icon" href="/uploads/favicon_io/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <!-- Add any additional CSS or font links here -->
+
+  <!-- Fonts and External CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+  <link rel="stylesheet" href="https://paystack.com/public/css/button.min.css" />
+
+  <!-- ✅ Strong Content Security Policy -->
+  <meta http-equiv="Content-Security-Policy"
+    content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://paystack.com;
+      img-src 'self' data: https://icstmn.org.ng https://your-domain.com https://images.pexels.com;
+      font-src 'self' https://fonts.gstatic.com;
+      connect-src 'self' https://api.paystack.co https://localhost;
+      object-src 'none';
+      frame-src https://paystack.com;
+      base-uri 'self';
+      form-action 'self';
+      manifest-src 'self';
+    " />
 </head>
+
 <body>
-  <noscript>
-    You need to enable JavaScript to run this app.
-  </noscript>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
-  <!-- Vite/React will inject scripts here -->
 </body>
 </html>

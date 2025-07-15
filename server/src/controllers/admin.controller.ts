@@ -9,7 +9,7 @@ export const loginAdmin = async (request: FastifyRequest, reply: FastifyReply) =
 
     const user = await User.findOne({ email });
 
-    if (!user || (user.role !== 'Admin' && user.role !== 'Super Admin')) {
+    if (!user || (user.role !== 'admin' && user.role !== 'super admin')) {
       return reply.status(400).send({ message: 'Invalid credentials (admin not found)' });
     }
 
@@ -31,7 +31,7 @@ export const loginAdmin = async (request: FastifyRequest, reply: FastifyReply) =
       { expiresIn: '1d' }
     );
 
-    const redirectTo = user.role === 'Super Admin' ? '/admin' : '/admin1';
+    const redirectTo = user.role === 'super admin' ? '/admin' : '/admin1';
 
     reply.status(200).send({
       token,
@@ -58,7 +58,7 @@ export const getAdminReports = async (_request: FastifyRequest, reply: FastifyRe
     // Get all admins including Super Admins
     const admins = await User.find({
       isAdmin: true,
-      role: { $in: ['Admin', 'Super Admin'] }
+      role: { $in: ['admin', 'super admin'] }
     });
 
     // Format report data
