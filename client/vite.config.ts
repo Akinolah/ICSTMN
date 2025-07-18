@@ -4,20 +4,21 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173, // your frontend dev port
+    port: 5173,
     strictPort: true,
     cors: true,
     proxy: {
-      // Proxy API calls to Fastify backend during dev
       '/api': {
-        target: 'http://localhost:5000', // your backend
+        target: 'http://localhost:5000',
         changeOrigin: true,
-        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
     headers: {
-      // Relax CSP for development
-      'Content-Security-Policy': "default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:;",
+      // Optional: Allow any origin for dev
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     },
   },
   optimizeDeps: {

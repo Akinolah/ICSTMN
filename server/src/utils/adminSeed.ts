@@ -1,15 +1,12 @@
 import { FastifyInstance } from 'fastify';
 import User from '../models/user.model';
 import bcrypt from 'bcryptjs';
-import { stat } from 'fs';
 
-// Admin seed data
+// Admin seed data (Admins only — No Super Admins)
 const admins = [
-  { email: 'admin@icstmn.org.ng', password: 'Admin@1234', name: 'Super Admin', adminIndex: 0, role: 'super admin', status: 'active' },
-  { email: 'admin2@icstmn.org.ng', password: 'Admin@1234', name: 'Super Admin', adminIndex: 1, role: 'super admin', status: 'active' },
-  { email: 'admin3@icstmn.org.ng', password: 'Admin@1234', name: 'Admin', adminIndex: 2, role: 'admin', status: 'active' },
-  { email: 'admin4@icstmn.org.ng', password: 'Admin@1234', name: 'Admin', adminIndex: 3, role: 'admin', status: 'active' },
-  { email: 'admin5@icstmn.org.ng', password: 'Admin@1234', name: 'Admin', adminIndex: 4, role: 'admin', status: 'active' },
+  { email: 'admin@icstmn.org.ng', password: 'Admin@1234', name: 'Admin 1', adminIndex: 0, role: 'admin', status: 'active' },
+  { email: 'admin1@icstmn.org.ng', password: 'Admin@1234', name: 'Admin 2', adminIndex: 1, role: 'admin', status: 'active' },
+  { email: 'admin2@icstmn.org.ng', password: 'Admin@1234', name: 'Admin 3', adminIndex: 2, role: 'admin', status: 'active' },
 ];
 
 // User seed data

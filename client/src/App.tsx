@@ -8,7 +8,7 @@ import Events from './pages/Events';
 import Resources from './pages/Resources';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
-import SuperAdmin from './pages/SuperAdminPortal';
+// import SuperAdmin from './pages/SuperAdminPortal';
 import Admin from './pages/AdminPortal';
 import { AuthProvider } from './context/AuthContext';
 import { AppProvider } from './context/AppContext';
@@ -27,8 +27,8 @@ function App() {
               <Route path="/resources" element={<Resources />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/user" element={<Dashboard />} />
-              <Route path="/admin" element={<SuperAdmin />} />
-              <Route path="/admin1" element={<Admin />} />
+              {/* <Route path="/admin" element={<SuperAdmin />} /> */}
+              <Route path="/admin" element={<Admin />} />
               {/* Add more routes as needed */}
             </Routes>
           </Layout>

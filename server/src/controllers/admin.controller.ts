@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User, { IUser } from '../models/user.model';
+import User from '../models/user.model';
 
 export const loginAdmin = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
@@ -9,7 +9,7 @@ export const loginAdmin = async (request: FastifyRequest, reply: FastifyReply) =
 
     const user = await User.findOne({ email });
 
-    if (!user || (user.role !== 'admin' && user.role !== 'super admin')) {
+    if (!user || user.role !== 'admin') {
       return reply.status(400).send({ message: 'Invalid credentials (admin not found)' });
     }
 
@@ -31,11 +31,8 @@ export const loginAdmin = async (request: FastifyRequest, reply: FastifyReply) =
       { expiresIn: '1d' }
     );
 
-    const redirectTo = user.role === 'super admin' ? '/admin' : '/admin1';
-
     reply.status(200).send({
       token,
-      redirectTo,
       user: {
         id: user._id,
         name: user.name,
@@ -55,13 +52,10 @@ export const loginAdmin = async (request: FastifyRequest, reply: FastifyReply) =
 
 export const getAdminReports = async (_request: FastifyRequest, reply: FastifyReply) => {
   try {
-    // Get all admins including Super Admins
     const admins = await User.find({
-      isAdmin: true,
-      role: { $in: ['admin', 'super admin'] }
+      role: 'admin'
     });
 
-    // Format report data
     const reports = admins.map((admin) => ({
       id: admin._id,
       name: admin.name,

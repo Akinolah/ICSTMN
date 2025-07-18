@@ -1,7 +1,7 @@
 console.log('Starting Fastify server...');
 
 import Fastify from 'fastify';
-import fastifyCors from '@fastify/cors';
+import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -16,28 +16,29 @@ dotenv.config();
 
 const fastify = Fastify({ logger: true });
 
-// Register CORS
-fastify.register(fastifyCors, {
-  origin: ['https://icstmn.onrender.com', 'http://localhost:5173'],
+// Register CORS for frontend access
+fastify.register(cors, {
+  origin: ['http://localhost:5173'],
   credentials: true
 });
 
-// Register API routes
+// API routes
 fastify.register(authRoutes, { prefix: '/api/auth' });
 fastify.register(paymentRoutes, { prefix: '/api/payments' });
 fastify.register(adminRoutes, { prefix: '/api/admin' });
 fastify.register(eventRoutes, { prefix: '/api/events' });
 
-// Serve static files
-fastify.register(fastifyStatic, {
-  root: path.join(__dirname, '../../client/dist'),
-  prefix: '/',
-});
+// Serve frontend only in production
+if (process.env.NODE_ENV === 'production') {
+  fastify.register(fastifyStatic, {
+    root: path.join(__dirname, '../../client/dist'),
+    prefix: '/',
+  });
 
-// Wildcard route for SPA (serves index.html for all unmatched routes)
-fastify.setNotFoundHandler((req, reply) => {
-  reply.sendFile('index.html');
-});
+  fastify.setNotFoundHandler((req, reply) => {
+    reply.sendFile('index.html');
+  });
+}
 
 const PORT = Number(process.env.PORT) || 5000;
 

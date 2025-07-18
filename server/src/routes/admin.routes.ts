@@ -3,37 +3,37 @@ import { getAdminReports, loginAdmin } from '../controllers/admin.controller';
 import { getEvents, createEvent, deleteEvent } from '../controllers/event.controller';
 import { getResources, createResource, deleteResource } from '../controllers/resource.controller';
 import { getUsers, deleteUser } from '../controllers/user.controller';
-import { authMiddleware, superAdminOnly } from '../middleware/auth';
+import { authMiddleware, adminOnly } from '../middleware/auth';
 
 export default function (
   fastify: FastifyInstance,
   opts: FastifyPluginOptions,
   done: () => void
 ) {
-  // Admin login (no auth)
+  // Admin login (public)
   fastify.post('/login', loginAdmin);
 
-  // Admin reports (super admin only)
+  // Admin reports (admin only)
   fastify.get('/reports', {
-    preHandler: [authMiddleware, superAdminOnly]
+    preHandler: [authMiddleware, adminOnly]
   }, getAdminReports);
 
-  // Events (admin or super admin)
-  fastify.get('/events', { preHandler: [authMiddleware] }, getEvents);
-  fastify.post('/events', { preHandler: [authMiddleware] }, createEvent);
-  fastify.delete('/events/:id', { preHandler: [authMiddleware] }, deleteEvent);
+  // Events management (admin only)
+  fastify.get('/events', { preHandler: [authMiddleware, adminOnly] }, getEvents);
+  fastify.post('/events', { preHandler: [authMiddleware, adminOnly] }, createEvent);
+  fastify.delete('/events/:id', { preHandler: [authMiddleware, adminOnly] }, deleteEvent);
 
-  // Resources (admin or super admin)
-  fastify.get('/resources', { preHandler: [authMiddleware] }, getResources);
-  fastify.post('/resources', { preHandler: [authMiddleware] }, createResource);
-  fastify.delete('/resources/:id', { preHandler: [authMiddleware] }, deleteResource);
+  // Resources management (admin only)
+  fastify.get('/resources', { preHandler: [authMiddleware, adminOnly] }, getResources);
+  fastify.post('/resources', { preHandler: [authMiddleware, adminOnly] }, createResource);
+  fastify.delete('/resources/:id', { preHandler: [authMiddleware, adminOnly] }, deleteResource);
 
-  // User management (super admin only)
+  // User management (admin only)
   fastify.get('/users', {
-    preHandler: [authMiddleware, superAdminOnly]
+    preHandler: [authMiddleware, adminOnly]
   }, getUsers);
   fastify.delete('/users/:id', {
-    preHandler: [authMiddleware, superAdminOnly]
+    preHandler: [authMiddleware, adminOnly]
   }, deleteUser);
 
   done();
