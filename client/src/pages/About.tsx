@@ -109,11 +109,11 @@ const About: React.FC = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-900 to-blue-700 text-white py-20">
+      <section className="relative bg-gradient-to-br from-green-900 to-emerald-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-5xl font-bold mb-6">About Our Institute</h1>
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-green-100 max-w-3xl mx-auto leading-relaxed">
               The Institute of Strategic Customer Service and Trade Management (ICSTM) is a professional body registered under the Companies and Allied Matters Act of 1990, Federal Republic of Nigeria. Fully approved by the Federal Ministry of Education and the Ministry of Justice, the Institute is dedicated to advancing the profession of trade management and customer service across Nigeria and beyond.
               <br /><br />
               ICSTM brings together stakeholders, organizes conferences, and conducts focus groups to promote the development of trade management and related industries. Our mission is to drive customer service to the center of business, helping organizations exceed customer expectations and serve the needs of all stakeholders in both the private and public sectors.

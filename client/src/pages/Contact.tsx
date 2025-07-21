@@ -5,10 +5,10 @@ const Contact: React.FC = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-900 to-emerald-700 text-white py-20">
+      <section className="relative bg-gradient-to-br from-green-900 to-emerald-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl font-bold mb-6">Contact Us</h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-green-100 max-w-3xl mx-auto leading-relaxed">
             Get in touch with our team for membership inquiries, event information, 
             or any questions about our professional development programs.
           </p>
@@ -21,15 +21,15 @@ const Contact: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Contact Info Cards */}
             <div className="lg:col-span-1 space-y-6">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl">
-                <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
+              <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl">
+                <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center mb-4">
                   <Phone className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Phone</h3>
                 <p className="text-gray-600 mb-2">General Inquiries</p>
-                <p className="text-blue-600 font-semibold">+234 (0) 8080060111</p>
+                <p className="text-green-600 font-semibold">+234 (0) 8080060111</p>
                 <p className="text-gray-600 mt-2">Membership Services</p>
-                <p className="text-blue-600 font-semibold">+234 (0) 8167655723</p>
+                <p className="text-green-600 font-semibold">+234 (0) 8167655723</p>
               </div>
 
               <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-2xl">
@@ -83,7 +83,7 @@ const Contact: React.FC = () => {
                         type="text"
                         id="firstName"
                         name="firstName"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                         placeholder="Enter your first name"
                       />
                     </div>
@@ -95,7 +95,7 @@ const Contact: React.FC = () => {
                         type="text"
                         id="lastName"
                         name="lastName"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                         placeholder="Enter your last name"
                       />
                     </div>
@@ -109,7 +109,7 @@ const Contact: React.FC = () => {
                       type="email"
                       id="email"
                       name="email"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                       placeholder="Enter your email address"
                     />
                   </div>
@@ -122,7 +122,7 @@ const Contact: React.FC = () => {
                       type="tel"
                       id="phone"
                       name="phone"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                       placeholder="Enter your phone number"
                     />
                   </div>
@@ -134,7 +134,7 @@ const Contact: React.FC = () => {
                     <select
                       id="subject"
                       name="subject"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                     >
                       <option value="">Select a subject</option>
                       <option value="membership">Membership Inquiry</option>
@@ -154,14 +154,14 @@ const Contact: React.FC = () => {
                       id="message"
                       name="message"
                       rows={6}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors resize-none"
                       placeholder="Enter your message here..."
                     ></textarea>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-emerald-700 transition-all duration-300 flex items-center justify-center transform hover:scale-105"
+                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 flex items-center justify-center transform hover:scale-105"
                   >
                     <Send className="w-5 h-5 mr-2" />
                     Send Message
@@ -247,11 +247,11 @@ const Contact: React.FC = () => {
             Our team is here to help you find the information you need and support your professional journey.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+            <button className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors">
               <MessageSquare className="w-5 h-5 mr-2" />
               Chat with Us
             </button>
-            <button className="inline-flex items-center justify-center px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors">
+            <button className="inline-flex items-center justify-center px-6 py-3 border-2 border-green-600 text-green-600 font-semibold rounded-lg hover:bg-green-50 transition-colors">
               <Phone className="w-5 h-5 mr-2" />
               Schedule a Call
             </button>

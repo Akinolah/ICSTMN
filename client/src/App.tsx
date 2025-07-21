@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import Admin from './pages/AdminPortal';
 import { AuthProvider } from './context/AuthContext';
 import { AppProvider } from './context/AppContext';
+import AuthPage from './pages/Auth';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route path="/events" element={<Events />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/auth" element={<AuthPage />} />
               <Route path="/user" element={<Dashboard />} />
               {/* <Route path="/admin" element={<SuperAdmin />} /> */}
               <Route path="/admin" element={<Admin />} />

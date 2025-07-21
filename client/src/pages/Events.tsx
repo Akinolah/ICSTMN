@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, MapPin, Clock, Users, Filter, Search, CreditCard, ArrowRight } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
-import AuthModal from '../components/AuthModal';
+import SignupModal from '../components/SignupModal';
 
 const Events: React.FC = () => {
   const { events, registerForEvent } = useApp();
@@ -11,7 +11,7 @@ const Events: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [registrationForm, setRegistrationForm] = useState({
     name: '',
     email: '',
@@ -59,7 +59,7 @@ const Events: React.FC = () => {
       });
       setIsRegistrationOpen(true);
     } else {
-      setIsAuthModalOpen(true);
+      setIsSignupOpen(true);
     }
   };
 
@@ -67,7 +67,7 @@ const Events: React.FC = () => {
     e.preventDefault();
     
     if (!user) {
-      setIsAuthModalOpen(true);
+      setIsSignupOpen(true);
       return;
     }
 
@@ -98,11 +98,11 @@ const Events: React.FC = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-900 to-emerald-700 text-white py-20">
+      <section className="relative bg-gradient-to-br from-green-900 to-emerald-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl font-bold mb-6">Events & Programs</h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-            Join us for professional development workshops, networking events, conferences, and seminars 
+          <p className="text-xl text-green-100 max-w-3xl mx-auto leading-relaxed">
+            Join us for professional development workshops, networking events, conferences, and seminars
             designed to advance your career and expand your professional network.
           </p>
         </div>
@@ -120,7 +120,7 @@ const Events: React.FC = () => {
                 placeholder="Search events..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
 
@@ -132,7 +132,7 @@ const Events: React.FC = () => {
                   onClick={() => setActiveFilter(category.key)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     activeFilter === category.key
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-green-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -211,7 +211,7 @@ const Events: React.FC = () => {
                     
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <span className="text-lg font-bold text-blue-600 block">
+                        <span className="text-lg font-bold text-green-600 block">
                           {event.price}
                         </span>
                         {event.nonMemberPrice !== event.price && (
@@ -224,7 +224,7 @@ const Events: React.FC = () => {
                     
                     <button
                       onClick={() => handleEventRegistration(event)}
-                      className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                      className="w-full py-2 px-4 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
                       disabled={event.currentAttendees >= event.maxAttendees}
                     >
                       {event.currentAttendees >= event.maxAttendees ? 'Event Full' : 'Register Now'}
@@ -390,21 +390,21 @@ const Events: React.FC = () => {
       {/* Upcoming Events Summary */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-blue-600 to-emerald-600 rounded-2xl p-8 text-white text-center">
+          <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-8 text-white text-center">
             <h2 className="text-3xl font-bold mb-4">Don't Miss Out!</h2>
-            <p className="text-xl mb-6 text-blue-100">
+            <p className="text-xl mb-6 text-green-100">
               Stay updated with our latest events and professional development opportunities.
             </p>
-            <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <button className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
               Subscribe to Event Updates
             </button>
           </div>
         </div>
       </section>
 
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
+      <Signup
+        isOpen={isSignupOpen}
+        onClose={() => setIsSignupOpen(false)}
       />
     </div>
   );

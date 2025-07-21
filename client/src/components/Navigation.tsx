@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, User, Settings, FileText, Calendar, Users, Award, BookOpen, Shield, Home, UserCog } from 'lucide-react';
-import AuthModal from './AuthModal';
-import AdminAuthModal from './AdminAuthModal';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Menu, X, ChevronDown, User, Settings, FileText,
+  Calendar, Users, Award, BookOpen, Shield, Home, LogIn, UserPlus
+} from 'lucide-react';
 
 // Image imports
-import logo from '../uploads/logo/logo.png';
+import logo from '../uploads/logo/logo.png'; // Adjust the path as necessary
 
 const Navigation: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isAdminAuthModalOpen, setIsAdminAuthModalOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { label: 'Home', href: '/', icon: Home },
@@ -63,12 +63,12 @@ const Navigation: React.FC = () => {
     setActiveDropdown(activeDropdown === label ? null : label);
   };
 
-  const handleMemberPortalClick = () => {
-    setIsAuthModalOpen(true);
+  const handleSignupPortalClick = () => {
+    navigate('/auth?signup');
   };
 
-  const handleAdminPortalClick = () => {
-    setIsAdminAuthModalOpen(true);
+  const handleLoginPortalClick = () => {
+    navigate('/auth?login');
   };
 
   return (
@@ -78,11 +78,11 @@ const Navigation: React.FC = () => {
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-1">
-              <div className="w-28 h-28 flex items-center justify-center">
-                <img src={logo} alt="Institute Logo" className="w-20 h-20 rounded-full object-cover" />
+              <div className="w-24 h-24 flex items-center justify-center bg-green-300 rounded-full">
+                <img src={logo} alt="Institute Logo" className="w-28 h-28 object-contain" />
               </div>
               <div className="hidden md:block">
-                <h1 className="text-xl font-bold text-blue-800">ICSTMN</h1>
+                <h1 className="text-xl font-bold text-green-800">ICSTMN</h1>
                 <p className="text-sm text-gray-600">Excellence in Service & Trade</p>
               </div>
             </Link>
@@ -95,8 +95,8 @@ const Navigation: React.FC = () => {
                     to={item.href}
                     className={`flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                       location.pathname === item.href
-                        ? 'text-blue-800 bg-blue-50'
-                        : 'text-gray-700 hover:text-blue-800 hover:bg-blue-50'
+                        ? 'text-green-800 bg-green-50'
+                        : 'text-gray-700 hover:text-green-800 hover:bg-green-50'
                     }`}
                     onMouseEnter={() => item.dropdown && setActiveDropdown(item.label)}
                   >
@@ -104,7 +104,6 @@ const Navigation: React.FC = () => {
                     {item.dropdown && <ChevronDown className="w-4 h-4" />}
                   </Link>
 
-                  {/* Dropdown Menu */}
                   {item.dropdown && (
                     <div
                       className={`absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0`}
@@ -117,7 +116,7 @@ const Navigation: React.FC = () => {
                             <Link
                               key={dropdownItem.label}
                               to={dropdownItem.href}
-                              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm text-gray-700 hover:text-blue-800 hover:bg-blue-50 transition-colors duration-200"
+                              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm text-gray-700 hover:text-green-800 hover:bg-green-50 transition-colors duration-200"
                             >
                               <Icon className="w-4 h-4" />
                               <span>{dropdownItem.label}</span>
@@ -134,17 +133,18 @@ const Navigation: React.FC = () => {
             {/* Portal Buttons */}
             <div className="hidden lg:flex items-center space-x-2">
               <button
-                onClick={handleMemberPortalClick}
-                className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-all duration-200"
+                onClick={handleSignupPortalClick}
+                className="flex items-center px-4 py-2 text-sm font-medium text-green-700 bg-green-50 rounded-lg hover:bg-green-100 transition-all duration-200"
               >
-                Member Portal
+                <UserPlus className="w-4 h-4 mr-2" />
+                Join Us Now
               </button>
               <button
-                onClick={handleAdminPortalClick}
-                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center"
+                onClick={handleLoginPortalClick}
+                className="flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-700 rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 transform hover:scale-105 shadow-lg"
               >
-                <UserCog className="w-4 h-4 mr-2" />
-                Admin Portal
+                <LogIn className="w-4 h-4 mr-2" />
+                Login
               </button>
             </div>
 
@@ -168,7 +168,7 @@ const Navigation: React.FC = () => {
                     <Link
                       to={item.href}
                       className={`text-sm font-medium ${
-                        location.pathname === item.href ? 'text-blue-800' : 'text-gray-700'
+                        location.pathname === item.href ? 'text-green-800' : 'text-gray-700'
                       }`}
                       onClick={() => !item.dropdown && setIsMobileMenuOpen(false)}
                     >
@@ -185,7 +185,6 @@ const Navigation: React.FC = () => {
                       </button>
                     )}
                   </div>
-                  
                   {item.dropdown && activeDropdown === item.label && (
                     <div className="mt-2 ml-4 space-y-2">
                       {item.dropdown.map((dropdownItem) => {
@@ -194,7 +193,7 @@ const Navigation: React.FC = () => {
                           <Link
                             key={dropdownItem.label}
                             to={dropdownItem.href}
-                            className="flex items-center space-x-2 text-sm text-gray-600 hover:text-blue-800"
+                            className="flex items-center space-x-2 text-sm text-gray-600 hover:text-green-800"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
                             <Icon className="w-4 h-4" />
@@ -206,35 +205,27 @@ const Navigation: React.FC = () => {
                   )}
                 </div>
               ))}
-              
+
               <div className="pt-4 border-t border-gray-200 space-y-2">
                 <button
-                  onClick={handleMemberPortalClick}
-                  className="w-full px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200"
+                  onClick={handleSignupPortalClick}
+                  className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-green-700 bg-green-50 rounded-lg hover:bg-green-100"
                 >
-                  Member Portal
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Join Us Now
                 </button>
                 <button
-                  onClick={handleAdminPortalClick}
-                  className="w-full px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-colors duration-200"
+                  onClick={handleLoginPortalClick}
+                  className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-700 rounded-lg hover:from-green-700 hover:to-green-800"
                 >
-                  Admin Portal
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Login
                 </button>
               </div>
             </div>
           </div>
         )}
       </nav>
-
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
-
-      <AdminAuthModal
-        isOpen={isAdminAuthModalOpen}
-        onClose={() => setIsAdminAuthModalOpen(false)}
-      />
     </>
   );
 };

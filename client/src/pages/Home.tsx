@@ -4,7 +4,7 @@ import { Award, Users, BookOpen, TrendingUp, Shield, Globe, ArrowRight, CheckCir
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
-const API_URL_LOCAL = import.meta.env.VITE_API_URL_LOCAL || '';
+// const API_URL_LOCAL = import.meta.env.VITE_API_URL_LOCAL || '';
 
 const Home: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -152,7 +152,7 @@ const Home: React.FC = () => {
 
   // Fetch latest updates from API
   useEffect(() =>{
-    axios.get(`${API_URL}/events?limit=3`)
+    axios.get(`${API_URL}/api/events?limit=3`)
     .then(res => setLatestUpdates(res.data.events))
     .catch(() => setLatestUpdates([]));
   }, []);
@@ -184,7 +184,7 @@ const Home: React.FC = () => {
                 </p>
                 <Link
                   to="/membership"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-900 to-green-500 text-white font-semibold rounded-xl hover:from-lemon-600 hover:to-green-600 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
                 >
                   {slide.cta}
                   <ArrowRight className="ml-2 w-6 h-6" />
@@ -227,8 +227,8 @@ const Home: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-amber-400">{stat.number}</div>
-                  <div className="text-sm text-blue-100 mt-1">{stat.label}</div>
+                  <div className="text-2xl md:text-3xl font-bold text-green-400">{stat.number}</div>
+                  <div className="text-sm text-green-200 mt-1">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -255,7 +255,7 @@ const Home: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className="group p-8 bg-white rounded-2xl border border-gray-100 hover:border-blue-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+                  className="group p-8 bg-green-100 rounded-2xl border border-gray-100 hover:border-green-400 hover:bg-green-400 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
                 >
                   <div className={`w-14 h-14 ${feature.color} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                     <Icon className="w-7 h-7 text-white" />
@@ -285,7 +285,7 @@ const Home: React.FC = () => {
             {councilMembers.map((member, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+                className="bg-green-100 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
               >
                 <img
                   src={member.image}
@@ -294,7 +294,7 @@ const Home: React.FC = () => {
                 />
                 <div className="p-6">
                   <h3 className="text-lg font-bold text-gray-900 mb-2">{member.name}</h3>
-                  <p className="text-blue-600 font-semibold mb-3 text-sm">{member.position}</p>
+                  <p className="text-green-600 font-semibold mb-3 text-sm">{member.role}</p>
                   <p className="text-gray-600 text-sm leading-relaxed">{member.bio}</p>
                 </div>
               </div>
@@ -354,7 +354,7 @@ const Home: React.FC = () => {
             </div>
             <Link
               to="/events"
-              className="hidden md:inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+              className="hidden md:inline-flex items-center px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
             >
               View All Events
               <ArrowRight className="ml-2 w-4 h-4" />
@@ -402,7 +402,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-800 to-emerald-700 text-white">
+      <section className="py-20 bg-gradient-to-r from-green-800 to-emerald-700 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">
             Ready to Advance Your Professional Journey?
@@ -414,7 +414,7 @@ const Home: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/membership"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-800 font-semibold rounded-xl hover:bg-gray-100 transition-colors transform hover:scale-105"
+              className="inline-flex items-center justify-center px-8 py-4 bg-white text-green-800 font-semibold rounded-xl hover:bg-gray-100 transition-colors transform hover:scale-105"
             >
               Start Your Membership
               <ArrowRight className="ml-2 w-5 h-5" />

@@ -7,12 +7,13 @@ interface User {
   email: string;
   membershipType?: string;
   role: 'user' | 'admin';
-  joinDate?: string;
-  status?: string;
-  phone?: string;
-  profession?: string;
-  organization?: string;
-  address?: string;
+  joinDate: string;
+  status: 'active' | 'pending' | 'suspended';
+  phone: string;
+  profession: string;
+  organization: string;
+  address: string;
+  [key: string]: any;
 }
 
 interface AuthContextType {
@@ -25,6 +26,8 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -47,10 +50,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
 
   const login = async (email: string, password: string, type: 'user' | 'admin') => {
-    let endpoint = 'http://localhost:5000/api/auth/login'; // default: user
+    let endpoint = `${API_URL}/api/auth/login`; // default: user
 
     if (type === 'admin') {
-      endpoint = 'http://localhost:5000/api/admin/login';
+      endpoint = `${API_URL}/api/admin/login`;
     }
 
     try {

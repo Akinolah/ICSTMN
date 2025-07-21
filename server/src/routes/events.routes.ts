@@ -1,11 +1,12 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import { getLatestEvents } from '../controllers/event.controller';
 
-export default function (
+export default async function eventRoutes(
   fastify: FastifyInstance,
-  opts: FastifyPluginOptions,
-  done: () => void
+  opts: FastifyPluginOptions
 ) {
-  fastify.get('/', getLatestEvents);
-  done();
+  // Full path will be /api/events due to prefix during registration
+  fastify.get('/', async (request, reply) => {
+    return getLatestEvents(request, reply);
+  });
 }

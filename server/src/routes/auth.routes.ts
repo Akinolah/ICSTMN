@@ -1,19 +1,7 @@
-import { FastifyInstance, FastifyPluginOptions } from 'fastify';
-import { loginUser, precheckRegistration, registerUser } from '../controllers/auth.controller';
+// src/routes/auth.routes.ts
+import { FastifyInstance } from 'fastify';
+import { login } from '../controllers/auth.controller';
 
-export default function (
-  fastify: FastifyInstance,
-  opts: FastifyPluginOptions,
-  done: () => void
-) {
-  // Precheck if email exists before registration
-  fastify.post('/precheck', precheckRegistration);
-
-  // User registration
-  fastify.post('/register', registerUser);
-
-  // User login
-  fastify.post('/login', loginUser);
-
-  done();
+export default async function authRoutes(fastify: FastifyInstance) {
+  fastify.post('/api/auth/login', login);
 }
