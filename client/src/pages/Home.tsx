@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Award, Users, BookOpen, TrendingUp, Shield, Globe, ArrowRight, CheckCircle, Star, Calendar, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Award, Users, BookOpen, TrendingUp, Shield, Globe, ArrowRight, CheckCircle, Star, Calendar, FileText, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
-// const API_URL_LOCAL = import.meta.env.VITE_API_URL_LOCAL || '';
 
 const Home: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [latestUpdates, setLatestUpdates] = useState<any[]>([]);
+  const [showModal, setShowModal] = useState(true);
 
   // Hero Slides Data
   const heroSlides = [
@@ -151,7 +151,7 @@ const Home: React.FC = () => {
   };
 
   // Fetch latest updates from API
-  useEffect(() =>{
+  useEffect(() => {
     axios.get(`${API_URL}/api/events?limit=3`)
     .then(res => setLatestUpdates(res.data.events))
     .catch(() => setLatestUpdates([]));
@@ -159,6 +159,42 @@ const Home: React.FC = () => {
 
   return (
     <div>
+      {/* Modal Popup */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4">
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-auto">
+            <div className="relative">
+              <button
+                onClick={() => setShowModal(false)}
+                className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100"
+              >
+                <X className="w-6 h-6 text-gray-800" />
+              </button>
+              <img 
+                src="/uploads/images/flyer.png"
+                alt="Announcement"
+                className="w-full h-auto object-cover rounded-t-xl"
+              />
+            </div>
+            <div className="p-6">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Important Announcement</h3>
+              <p className="text-gray-700 mb-6">
+                Welcome to our professional institute! We're excited to have you here. 
+                Please take a moment to explore our latest programs and events.
+              </p>
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero Carousel Section */}
       <section className="relative h-screen overflow-hidden">
         {heroSlides.map((slide, index) => (

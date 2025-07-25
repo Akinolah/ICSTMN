@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 
 // Image imports
-import logo from '../uploads/logo/logo.png'; // Adjust the path as necessary
+import logo from '../uploads/logo/Logo.png'; // Adjust the path as necessary
 
 const Navigation: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -78,7 +78,7 @@ const Navigation: React.FC = () => {
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-1">
-              <div className="w-24 h-24 flex items-center justify-center bg-green-300 rounded-full">
+              <div className="w-24 h-24 flex items-center justify-center">
                 <img src={logo} alt="Institute Logo" className="w-28 h-28 object-contain" />
               </div>
               <div className="hidden md:block">
