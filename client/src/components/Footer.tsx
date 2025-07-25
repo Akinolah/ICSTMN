@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Award, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 
 // Importing the logo image
-import logo from '../uploads/logo/logo.png';
+import Logo from '@/uploads/logo/Logo.jpeg';
 
 const Footer: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-24 h-24 flex items-center justify-center">
-                <img src={logo} alt="Institute Logo" className="w-20 h-20 rounded-full object-cover" />
+                <img src={Logo} alt="Institute Logo" className="w-20 h-20 rounded-full object-cover" />
               </div>
               <div>
                 <h3 className="text-lg font-bold">ICSTMN</h3>
