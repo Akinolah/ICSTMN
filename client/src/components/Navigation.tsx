@@ -64,11 +64,11 @@ const Navigation: React.FC = () => {
   };
 
   const handleSignupPortalClick = () => {
-    navigate('/auth?signup');
+    navigate('/apply'); // Adjust the path as necessary
   };
 
   const handleLoginPortalClick = () => {
-    navigate('/auth?login');
+    navigate('/login'); // Adjust the path as necessary
   };
 
   return (

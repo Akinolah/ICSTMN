@@ -1,246 +1,324 @@
 // File: pages/Membership.tsx
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
-  Award, Users, BookOpen, Calendar, Shield, Star,
-  CheckCircle, ArrowRight, CreditCard, Download
+  Award, Users, BookOpen, Shield, Star,
+  CheckCircle, ArrowRight, FileText, ClipboardCheck,
+  CreditCard
 } from 'lucide-react';
-import Signup from '../components/SignupModal';
 
 const Membership: React.FC = () => {
-  const [isSignupOpen, setIsSignupOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const membershipTiers = [
     {
-      id: 'student',
-      title: 'Student Member',
-      total: '₦75,000',
+      id: 'graduate',
+      title: 'Graduate Member',
+      price: '₦50,000',
       breakdown: [
-        { label: 'Application Form Fee', amount: '₦10,000' },
-        { label: 'Inauguration Fee', amount: '₦50,000' },
-        { label: 'Annual Subscription', amount: '₦15,000' }
+        { label: 'Application Fee', amount: '₦5,000' },
+        { label: 'Induction Fee', amount: '₦40,000' },
+        { label: 'Annual Subscription', amount: '₦5,000' }
       ],
-      description: 'For undergraduates or recent graduates beginning their journey.',
-      features: [
-        'Access to online resources',
-        'Career guidance sessions',
-        'Student networking events',
+      requirements: [
+        'Minimum of 3 years work experience',
+        'Must have undergone the institute Students\' Membership Scheme or passed specified examination',
+        'Membership of other recognised professional bodies is an advantage'
+      ],
+      benefits: [
+        'Access to professional resources',
+        'Career development sessions',
+        'Networking opportunities',
         'Discounted workshops',
-        'Monthly newsletter',
         'Basic certification eligibility'
-      ],
-      color: 'border-blue-200 hover:border-blue-300',
-      badge: null
+      ]
     },
     {
       id: 'associate',
       title: 'Associate Member',
-      total: '₦95,000',
+      price: '₦100,000',
       breakdown: [
-        { label: 'Application Form Fee', amount: '₦10,000' },
-        { label: 'Inauguration Fee', amount: '₦60,000' },
-        { label: 'Annual Subscription', amount: '₦25,000' }
+        { label: 'Application Fee', amount: '₦10,000' },
+        { label: 'Induction Fee', amount: '₦75,000' },
+        { label: 'Annual Subscription', amount: '₦15,000' }
       ],
-      description: 'For early-career professionals seeking growth.',
-      features: [
+      requirements: [
+        'Graduate of not less than four years',
+        'Must have passed specified examination',
+        'Member of ICAN, CIBN, NIM, ANAN, ACCA or CIPM is an advantage',
+        'Must demonstrate good conduct'
+      ],
+      benefits: [
         'Professional networking events',
-        'Mentorship access',
+        'Mentorship programs',
         'Workshop discounts',
         'Job board access',
-        'Certification eligibility',
-        'Industry publications'
-      ],
-      color: 'border-emerald-200 hover:border-emerald-300',
-      badge: null
+        'Certification eligibility'
+      ]
     },
     {
       id: 'full',
       title: 'Full Member',
-      total: '₦120,000',
+      price: '₦130,000',
       breakdown: [
-        { label: 'Application Form Fee', amount: '₦10,000' },
-        { label: 'Inauguration Fee', amount: '₦75,000' },
-        { label: 'Annual Subscription', amount: '₦35,000' }
+        { label: 'Application Fee', amount: '₦10,000' },
+        { label: 'Induction Fee', amount: '₦100,000' },
+        { label: 'Annual Subscription', amount: '₦20,000' }
       ],
-      description: 'For experienced professionals and industry leaders.',
-      features: [
+      requirements: [
+        'Graduate of six (6) years and above',
+        'Passed specified examination or active in Customer Service/Trade',
+        'Managers need 5+ years experience plus seminars/thesis',
+        'Higher degree or member of relevant Professional Bodies',
+        'Excellent professional conduct'
+      ],
+      benefits: [
         'Premium resources',
-        'Leadership events',
-        'One-on-one mentoring',
+        'Leadership programs',
+        'Executive mentoring',
         'Free workshop access',
-        'Priority support',
-        'Conference inclusion',
+        'Priority certification',
         'Speaking opportunities'
-      ],
-      color: 'border-amber-200 hover:border-amber-300',
-      badge: 'Most Popular'
+      ]
     },
     {
       id: 'fellow',
       title: 'Fellow Member',
-      total: '₦180,000',
+      price: '₦200,000',
       breakdown: [
-        { label: 'Application Form Fee', amount: '₦20,000' },
-        { label: 'Inauguration Fee', amount: '₦100,000' },
-        { label: 'Annual Subscription', amount: '₦60,000' }
+        { label: 'Application Fee', amount: '₦20,000' },
+        { label: 'Induction Fee', amount: '₦150,000' },
+        { label: 'Annual Subscription', amount: '₦30,000' }
       ],
-      description: 'For distinguished professionals with major contributions.',
-      features: [
+      requirements: [
+        'Graduate of fifteen (15) years and above',
+        'Senior Manager/Director with 10+ years experience',
+        'Exceptional service delivery record',
+        'Active Trade Facilitator',
+        'Higher degree holder',
+        'Member of relevant professional bodies',
+        'Demonstrated integrity and influence'
+      ],
+      benefits: [
         'All Full Member benefits',
-        'Exclusive events',
+        'Exclusive fellowship events',
         'Fellowship certificate',
         'Leadership roles',
-        'Honorary award eligibility'
-      ],
-      color: 'border-indigo-200 hover:border-indigo-300',
-      badge: 'Prestige'
-    },
-    {
-      id: 'corporate',
-      title: 'Corporate Member',
-      total: '₦500,000',
-      breakdown: [
-        { label: 'Corporate Application', amount: '₦100,000' },
-        { label: 'Onboarding Fee', amount: '₦200,000' },
-        { label: 'Annual Coverage', amount: '₦200,000' }
-      ],
-      description: 'For institutions supporting professional development.',
-      features: [
-        '50 team memberships',
-        'Custom training',
-        'On-site workshops',
-        'Corporate branding',
-        'Industry briefings',
-        'Executive partnerships'
-      ],
-      color: 'border-purple-200 hover:border-purple-300',
-      badge: 'Enterprise'
+        'Honorary award eligibility',
+        'International opportunities'
+      ]
     }
   ];
 
-  const handlePlanSelection = (planId: string) => {
-    setSelectedPlan(planId);
-    setIsSignupOpen(true);
+  const handleSelectTier = (tier: string) => {
+    navigate(`/preregister?tier=${encodeURIComponent(tier)}`);
   };
+
+  // const handleSelectTier = (tier: string) => {
+  //   navigate("/preregister", { state: { tier } });
+  // };
 
   return (
     <div className="text-gray-900">
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-green-900 to-emerald-700 py-20 text-white text-center">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-green-900 to-emerald-700 py-16 text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl font-bold mb-4">Membership Registration</h1>
-          <p className="text-xl max-w-3xl mx-auto">
-            Select a membership plan and gain access to exclusive resources, certifications, and professional opportunities.
+          <h1 className="text-4xl font-bold mb-4">ICSTM Membership</h1>
+          <p className="text-xl">
+            Join the Institute of Customer Service and Trade Management at the appropriate membership level
           </p>
         </div>
       </section>
 
-      {/* Notice */}
-      <section className="bg-red-50 text-red-800 py-4 text-center text-sm font-medium border-t border-b border-red-200">
-        ⚠️ All membership payments are <strong>non-refundable</strong>. Please read the requirements and terms & conditions before applying.
+      {/* Warning Notice */}
+      <section className="bg-red-50 text-red-800 py-3 text-center text-sm font-medium border-t border-b border-red-200">
+        <div className="max-w-6xl mx-auto px-4">
+          <Shield className="inline mr-2 w-4 h-4" />
+          <span>Membership applications are strictly vetted. All payments are non-refundable.</span>
+        </div>
       </section>
 
-      {/* Membership Tiers */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-2">Choose a Membership Tier</h2>
-            <p className="text-gray-600 text-lg">Transparent payment. No hidden fees.</p>
-          </div>
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-4 py-12">
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        {/* Membership Requirements */}
+        <section className="mb-16">
+          <div className="flex items-center mb-6">
+            <ClipboardCheck className="text-green-600 mr-3 w-8 h-8" />
+            <h2 className="text-3xl font-bold">Membership Categories & Requirements</h2>
+          </div>
+          
+          <div className="space-y-10">
             {membershipTiers.map((tier, index) => (
-              <div
-                key={index}
-                className={`relative bg-white rounded-xl border-2 ${tier.color} p-6 shadow-md hover:shadow-xl transition-all`}
-              >
-                {tier.badge && (
-                  <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-semibold px-4 py-1 rounded-full">
-                    {tier.badge}
-                  </span>
-                )}
-                <h3 className="text-2xl font-bold mb-2">{tier.title}</h3>
-                <p className="text-gray-600 mb-4">{tier.description}</p>
+              <div key={index} className="border-l-4 border-green-600 pl-6">
+                <h3 className="text-2xl font-semibold text-green-800 mb-3">{tier.title}</h3>
                 <div className="mb-4">
-                  {tier.breakdown.map((item, i) => (
-                    <div key={i} className="flex justify-between text-sm text-gray-700">
-                      <span>{item.label}:</span>
-                      <span>{item.amount}</span>
-                    </div>
-                  ))}
-                  <hr className="my-2" />
-                  <div className="flex justify-between font-semibold">
-                    <span>Total:</span>
-                    <span>{tier.total}</span>
-                  </div>
+                  <h4 className="font-medium text-gray-700 mb-2 flex items-center">
+                    <FileText className="mr-2 w-5 h-5 text-amber-600" />
+                    Strict Entry Requirements:
+                  </h4>
+                  <ul className="space-y-2 text-gray-700">
+                    {tier.requirements.map((req, i) => (
+                      <li key={i} className="flex items-start">
+                        <CheckCircle className="text-green-500 w-4 h-4 mr-2 mt-1" />
+                        <span>{req}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="mb-6 space-y-2 text-sm text-gray-700">
-                  {tier.features.map((feature, i) => (
-                    <li key={i} className="flex items-start">
-                      <CheckCircle className="text-green-500 w-4 h-4 mr-2 mt-1" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={() => handlePlanSelection(tier.id)}
-                  className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition"
-                >
-                  Apply for {tier.title}
-                </button>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Must Read: Requirements */}
-      <section className="bg-white py-20 border-t border-gray-200">
-        <div className="max-w-5xl mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6">Membership Requirements <span className="text-red-600 text-base">(Must Read)</span></h2>
-          <ul className="space-y-6 text-gray-700 text-lg">
-            <li>
-              <strong>Educational Background:</strong> At least a bachelor’s degree or equivalent.
-            </li>
-            <li>
-              <strong>Professional Experience:</strong> Relevant industry experience based on membership level.
-            </li>
-            <li>
-              <strong>References:</strong> Two references from existing members or industry professionals.
-            </li>
-            <li>
-              <strong>Ethics Agreement:</strong> You must accept and commit to our code of ethics and conduct.
-            </li>
-          </ul>
-        </div>
-      </section>
+        {/* Rules & Regulations */}
+        <section className="mb-16">
+          <div className="flex items-center mb-6">
+            <BookOpen className="text-green-600 mr-3 w-8 h-8" />
+            <h2 className="text-3xl font-bold">Rules & Regulations</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+              <h3 className="text-xl font-semibold mb-4 flex items-center">
+                <Shield className="text-green-600 mr-2" />
+                Code of Professional Conduct
+              </h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start">
+                  <CheckCircle className="text-green-500 w-4 h-4 mr-2 mt-1" />
+                  Maintain highest standards of professional competence
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="text-green-500 w-4 h-4 mr-2 mt-1" />
+                  Uphold integrity in all professional dealings
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="text-green-500 w-4 h-4 mr-2 mt-1" />
+                  Avoid conflicts of interest and disclose when unavoidable
+                </li>
+              </ul>
+            </div>
+            
+            <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+              <h3 className="text-xl font-semibold mb-4 flex items-center">
+                <Award className="text-green-600 mr-2" />
+                Membership Obligations
+              </h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start">
+                  <CheckCircle className="text-green-500 w-4 h-4 mr-2 mt-1" />
+                  Timely payment of annual subscription fees
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="text-green-500 w-4 h-4 mr-2 mt-1" />
+                  Participation in institute activities
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="text-green-500 w-4 h-4 mr-2 mt-1" />
+                  Continuing professional development
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
 
-      {/* Terms & Conditions */}
-      <section className="bg-gray-100 py-10 border-t">
-        <div className="max-w-4xl mx-auto px-4 text-center text-sm text-gray-600">
-          <p>
-            By applying for membership, you agree to abide by the Institute’s regulations, membership terms, and professional ethics. 
-            Membership is subject to approval and all fees paid are non-refundable. Fraudulent submissions will result in disqualification.
+        {/* Strict Policies */}
+        <section className="mb-16">
+          <div className="flex items-center mb-6">
+            <Shield className="text-red-600 mr-3 w-8 h-8" />
+            <h2 className="text-3xl font-bold">Strict Membership Policies</h2>
+          </div>
+          
+          <div className="bg-red-50 border-l-4 border-red-500 p-6">
+            <h3 className="text-xl font-semibold mb-3 text-red-800">Zero Tolerance Policy</h3>
+            <ul className="space-y-3 text-gray-700">
+              <li className="flex items-start">
+                <Star className="text-red-500 w-5 h-5 mr-2 mt-0.5" />
+                Any misconduct will result in immediate disciplinary action
+              </li>
+              <li className="flex items-start">
+                <Star className="text-red-500 w-5 h-5 mr-2 mt-0.5" />
+                Falsification of credentials leads to automatic expulsion
+              </li>
+              <li className="flex items-start">
+                <Star className="text-red-500 w-5 h-5 mr-2 mt-0.5" />
+                Membership lapses after 60 days of unpaid fees
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        {/* Membership Tiers Selection */}
+        <section>
+          <div className="flex items-center mb-6">
+            <Users className="text-green-600 mr-3 w-8 h-8" />
+            <h2 className="text-3xl font-bold">Membership Tiers & Benefits</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {membershipTiers.map((tier, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition">
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{tier.title}</h3>
+                  <p className="text-lg font-medium text-green-600 mb-4">{tier.price}</p>
+                  
+                  <div className="mb-4">
+                    <h4 className="font-medium mb-2 flex items-center text-sm text-gray-500">
+                      <CreditCard className="mr-2 w-4 h-4" />
+                      FEE BREAKDOWN
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      {tier.breakdown.map((item, i) => (
+                        <div key={i} className="flex justify-between">
+                          <span className="text-gray-700">{item.label}</span>
+                          <span className="font-medium">{item.amount}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="mb-6">
+                    <h4 className="font-medium mb-2 text-sm text-gray-500">BENEFITS</h4>
+                    <ul className="space-y-2 text-sm">
+                      {tier.benefits.slice(0, 4).map((benefit, i) => (
+                        <li key={i} className="flex items-start">
+                          <CheckCircle className="text-green-500 w-4 h-4 mr-2 mt-0.5" />
+                          <span>{benefit}</span>
+                        </li>
+                      ))}
+                      {tier.benefits.length > 4 && (
+                        <li className="text-gray-500 text-sm">+ {tier.benefits.length - 4} more benefits</li>
+                      )}
+                    </ul>
+                  </div>
+                  
+                  <button
+                    onClick={() => handleSelectTier(tier.id)}
+                    className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded font-medium transition text-sm"
+                  >
+                    Select {tier.title} <ArrowRight className="inline ml-2 w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Terms Footer */}
+        <section className="mt-16 pt-8 border-t border-gray-200 text-center text-sm text-gray-600">
+          <p className="mb-2">
+            By applying for membership, you agree to abide by all ICSTM regulations and professional ethics.
           </p>
-          <p className="mt-4">
-            <Link to="/terms" className="text-green-600 font-medium underline">View Full Terms & Conditions</Link>
-          </p>
-        </div>
-      </section>
-
-      {/* Signup Modal */}
-      <Signup
-        isOpen={isSignupOpen}
-        onClose={() => {
-          setIsSignupOpen(false);
-          setSelectedPlan(null);
-        }}
-        selectedPlan={selectedPlan}
-      />
+          <div className="flex justify-center space-x-4">
+            <Link to="/policy" className="text-green-600 font-medium underline">Policy Page</Link>
+            <Link to="/code-of-conduct" className="text-green-600 font-medium underline">Code of Conduct</Link>
+            <Link to="/ethics" className="text-green-600 font-medium underline">Ethics Policy</Link>
+          </div>
+        </section>
+      </div>
     </div>
   );
 };
 
-export default Membership;
+export default Membership;  
