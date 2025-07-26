@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, MapPin, Clock, Users, Filter, Search, CreditCard, ArrowRight } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
-import SignupModal from '../components/Signup';
+// import SignupModal from '../components/Signup';
 
 const Events: React.FC = () => {
   const { events, registerForEvent } = useApp();

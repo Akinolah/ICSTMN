@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Award, Users, BookOpen, TrendingUp, Shield, Globe, ArrowRight, CheckCircle, Star, Calendar, FileText, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+// const API_URL = import.meta.env.VITE_API_URL || '';
 
 const Home: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -151,11 +151,11 @@ const Home: React.FC = () => {
   };
 
   // Fetch latest updates from API
-  useEffect(() => {
-    axios.get(`${API_URL}/api/events?limit=3`)
-    .then(res => setLatestUpdates(res.data.events))
-    .catch(() => setLatestUpdates([]));
-  }, []);
+  // useEffect(() => {
+  //   axios.get(`${API_URL}/api/events?limit=3`)
+  //   .then(res => setLatestUpdates(res.data.events))
+  //   .catch(() => setLatestUpdates([]));
+  // }, []);
 
   return (
     <div>
